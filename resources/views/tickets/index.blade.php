@@ -6,6 +6,11 @@
         <h5 class="mb-0">All Tickets</h5>
     </div>
     <div class="card-body">
+        <div class="mb-3 text-end">
+            <a href="{{ route('tickets.create') }}" class="btn btn-info">
+                + Add Ticket
+            </a>
+        </div>
         <div class="table-responsive">
             <table class="table table-bordered table-hover table-striped align-middle">
                 <thead class="table-light">

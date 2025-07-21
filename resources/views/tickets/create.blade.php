@@ -18,6 +18,19 @@
 
         <form method="POST" action="{{ route('tickets.store') }}">
             @csrf
+            @php $isAdmin = auth()->user()->role === 'admin'; @endphp
+
+                @if($isAdmin)
+                <div class="mb-3">
+                    <label for="branch_id" class="form-label">Select Branch</label>
+                    <select name="branch_id" id="branch_id" class="form-select" required>
+                        <option value="">-- Select Branch --</option>
+                        @foreach($branches as $branch)
+                            <option value="{{ $branch->id }}">{{ $branch->name }}</option>
+                        @endforeach
+                    </select>
+                </div>
+            @endif
 
             <div class="mb-3">
                 <label for="subject" class="form-label">Subject</label>
@@ -29,7 +42,7 @@
                 <textarea name="description" id="description" class="form-control" rows="5" required></textarea>
             </div>
 
-            <button type="submit" class="btn btn-primary">Submit Ticket</button>
+            <button type="submit" class="btn btn-info">Submit Ticket</button>
         </form>
     </div>
 </div>
