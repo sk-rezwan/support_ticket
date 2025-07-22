@@ -36,7 +36,7 @@
     </div>
 </div>
 
-                <button type="submit" class="btn btn-primary">Update Status</button>
+                <button type="submit" class="btn btn-info">Update Status</button>
             </form>
         @endif
     </div>

@@ -42,6 +42,7 @@ class TicketController extends Controller
                             'b.name as br_name',
                             'solvers.name as solved_by_name'
                         )
+                        ->orderBy('created_at', 'desc')
                         ->get();
 
                 } else {
@@ -57,6 +58,7 @@ class TicketController extends Controller
                                 'solvers.name as solved_by_name'
                             )
                             ->where('tickets.user_id', auth()->id())
+                            ->orderBy('created_at', 'desc')
                             ->get();
 
                     }
