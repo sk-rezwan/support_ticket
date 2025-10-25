@@ -7,64 +7,28 @@ use Illuminate\Http\Request;
 
 class TicketController extends Controller
 {
-    public function index_old()
+    public function index()
         {
-            if (auth()->user()->role === 'admin') {
+            $query = DB::table('tickets')
+                ->join('users', 'tickets.user_id', '=', 'users.id')
+                ->leftJoin('branches as b', 'users.branch_id', '=', 'b.id')
+                ->leftJoin('users as solvers', 'tickets.solved_by', '=', 'solvers.id')
+                ->select(
+                    'tickets.*',
+                    'users.name as user_name',
+                    'b.name as br_name',
+                    'solvers.name as solved_by_name'
+                )
+                ->orderBy('tickets.created_at', 'desc');
 
-                $tickets = DB::table('tickets')
-                    ->join('users', 'tickets.user_id', '=', 'users.id') // ticket created by
-                    ->join('branches as b', 'users.branch_id', '=', 'b.id')
-                    ->leftJoin('users as solvers', 'tickets.solved_by', '=', 'solvers.id') // who solved it
-                    ->select(   'tickets.*',
-                                'users.name as user_name',
-                                'b.name as br_name',
-                                'solvers.name as solved_by_name'
-                            )
-                    ->get();
-            } else {
-                $tickets = DB::table('tickets')->where('user_id', auth()->id())->get();
+            if (auth()->user()->role != 1) {
+                $query->where('tickets.user_id', auth()->id());
             }
+
+            $tickets = $query->get();
 
             return view('tickets.index', compact('tickets'));
         }
-
-    public function index()
-            {
-                if (auth()->user()->role === 'admin') {
-
-                    $tickets = DB::table('tickets')
-                        ->join('users', 'tickets.user_id', '=', 'users.id') // ticket created by
-                        ->join('branches as b', 'users.branch_id', '=', 'b.id')
-                        ->leftJoin('users as solvers', 'tickets.solved_by', '=', 'solvers.id') // who solved it
-                        ->select(
-                            'tickets.*',
-                            'users.name as user_name',
-                            'b.name as br_name',
-                            'solvers.name as solved_by_name'
-                        )
-                        ->orderBy('created_at', 'desc')
-                        ->get();
-
-                } else {
-
-                        $tickets = DB::table('tickets')
-                            ->join('users', 'tickets.user_id', '=', 'users.id') // ticket created by
-                            ->join('branches as b', 'users.branch_id', '=', 'b.id')
-                            ->leftJoin('users as solvers', 'tickets.solved_by', '=', 'solvers.id') // who solved it
-                            ->select(
-                                'tickets.*',
-                                'users.name as user_name',
-                                'b.name as br_name',
-                                'solvers.name as solved_by_name'
-                            )
-                            ->where('tickets.user_id', auth()->id())
-                            ->orderBy('created_at', 'desc')
-                            ->get();
-
-                    }
-
-                    return view('tickets.index', compact('tickets'));
-                }
 
     public function create()
     {
@@ -75,7 +39,7 @@ class TicketController extends Controller
 
     public function store(Request $request)
     {
-       if (auth()->user()->role === 'admin') {
+       if (auth()->user()->role === 1) {
         // Get first user in selected branch
         $user = DB::table('users')
             ->where('branch_id', $request->branch_id)
@@ -116,7 +80,7 @@ class TicketController extends Controller
 
     public function update(Request $request, $id)
     {
-        if (auth()->user()->role !== 'admin') {
+        if (auth()->user()->role !== 1) {
             abort(403);
         }
 

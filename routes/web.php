@@ -29,4 +29,9 @@ Route::middleware('auth')->group(function () {
     
 
     Route::post('/logout', [LoginController::class, 'logout'])->name('logout');
+
+    //redirect to login
+     Route::get('/dashboard', function () {
+        return redirect('/tickets');
+    })->name('dashboard');
 });

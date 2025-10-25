@@ -5,8 +5,7 @@ namespace App\Http\Controllers\Auth;
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
-use Illuminate\Support\Facades\Hash;
-use App\Models\User;
+use Illuminate\Support\Facades\DB;
 
 class LoginController extends Controller
 {
@@ -21,24 +20,28 @@ class LoginController extends Controller
     {
         // Validate input
         $request->validate([
-            'email' => 'required|email',
+            'email'    => 'required|email',
             'password' => 'required'
         ]);
 
-        // Attempt login
-        $credentials = $request->only('email', 'password');
-        
+        // Find user by email
+        $user = DB::table('users')->where('email', $request->email)->first();
 
-        if (Auth::attempt($credentials)) {
-            $user = Auth::user();
+        // Check if user exists and password matches (MD5 comparison)
+        if ($user && $user->password === md5($request->password)) {
+            // Log user in manually
+            Auth::loginUsingId($user->id);
 
-            // Check role
-            if ($user->role === 'admin') {
+            // Role-based redirection
+            if ($user->role == 1) { // Admin
                 session()->flash('success', 'Welcome, Admin!');
-                return redirect('/tickets'); // or ->route('tickets.index')
-            } elseif ($user->role === 'branch') {
+                return redirect('/tickets');
+            } elseif ($user->role == 2) { // Engineer
+                session()->flash('success', 'Welcome, Engineer!');
+                return redirect('/tickets');
+            } elseif ($user->role == 3) { // Branch
                 session()->flash('success', 'Welcome, Branch user!');
-                return redirect('/tickets'); // or with bm view
+                return redirect('/tickets');
             } else {
                 Auth::logout();
                 return back()->withErrors(['email' => 'Unauthorized role.']);
