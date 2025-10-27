@@ -16,11 +16,11 @@
             </div>
         @endif
 
-        <form method="POST" action="{{ route('tickets.store') }}">
+        <form method="POST" action="{{ route('tickets.store') }}" enctype="multipart/form-data">
             @csrf
-            @php $isAdmin = auth()->user()->role === 'admin'; @endphp
+            @php $isAdmin = auth()->user()->role === 1; @endphp
 
-                @if($isAdmin)
+            @if($isAdmin)
                 <div class="mb-3">
                     <label for="branch_id" class="form-label">Select Branch</label>
                     <select name="branch_id" id="branch_id" class="form-select" required>
@@ -32,19 +32,29 @@
                 </div>
             @endif
 
-            <div class="mb-3">
-                <label for="subject" class="form-label">Subject</label>
-                <input type="text" name="subject" id="subject" class="form-control" required>
-            </div>
+    <div class="mb-3">
+        <label for="subject" class="form-label">Subject</label>
+        <input type="text" name="subject" id="subject" class="form-control" required>
+    </div>
 
-            <div class="mb-3">
-                <label for="description" class="form-label">Description</label>
-                <textarea name="description" id="description" class="form-control" rows="5" required></textarea>
-            </div>
+    <div class="mb-3">
+        <label for="description" class="form-label">Description</label>
+        <textarea name="description" id="description" class="form-control" rows="5" required></textarea>
+    </div>
 
-            <button type="submit" class="btn btn-info">Submit Ticket</button>
-            
-        </form>
+    <div class="mb-3">
+        <label for="contact_person" class="form-label">Contact Person</label>
+        <input type="text" name="contact_person" id="contact_person" class="form-control" placeholder="Enter contact person Name and Contact No ..">
+    </div>
+
+    <div class="mb-3">
+        <label for="attachment" class="form-label">Attach File (optional)</label>
+        <input type="file" name="attachment" id="attachment" class="form-control">
+        <small class="text-muted">Allowed types: jpg, png, pdf, doc, docx, xlsx (max 2MB)</small>
+    </div>
+
+    <button type="submit" class="btn btn-info">Submit Ticket</button>
+</form>
     </div>
 </div>
 @endsection

@@ -39,8 +39,19 @@ class TicketController extends Controller
 
     public function store(Request $request)
     {
-       if (auth()->user()->role === 1) {
-        // Get first user in selected branch
+        $request->validate([
+            'subject' => 'required|string|max:255',
+            'description' => 'required|string',
+            'contact_person' => 'nullable|string|max:255',
+            'attachment' => 'nullable|file|mimes:jpg,jpeg,png,pdf,doc,docx,xlsx|max:2048',
+        ]);
+
+        $filePath = null;
+        if ($request->hasFile('attachment')) {
+            $filePath = $request->file('attachment')->store('tickets', 'public');
+        }
+
+    if (auth()->user()->role === 1) {
         $user = DB::table('users')
             ->where('branch_id', $request->branch_id)
             ->first();
@@ -50,26 +61,29 @@ class TicketController extends Controller
         }
 
         DB::table('tickets')->insert([
-            'user_id' => $user->id, //Insert selected branch's user_id
+            'user_id' => $user->id,
             'subject' => $request->subject,
             'description' => $request->description,
+            'contact_person' => $request->contact_person,
+            'attachment' => $filePath,
             'status' => 0,
             'created_at' => now(),
             'updated_at' => now(),
         ]);
-       }else{
+    } else {
             DB::table('tickets')->insert([
-                'user_id' => auth()->id(), //own user id
+                'user_id' => auth()->id(),
                 'subject' => $request->subject,
                 'description' => $request->description,
+                'contact_person' => $request->contact_person,
+                'attachment' => $filePath,
                 'status' => 0,
                 'created_at' => now(),
                 'updated_at' => now(),
             ]);
-       }
-        
+        }
 
-        return redirect()->route('tickets.index');
+        return redirect()->route('tickets.index')->with('success', 'Ticket created successfully.');
     }
 
     public function show($id)
