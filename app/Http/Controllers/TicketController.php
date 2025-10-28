@@ -8,33 +8,40 @@ use Illuminate\Http\Request;
 class TicketController extends Controller
 {
     public function index()
-        {
-            $query = DB::table('tickets')
-                ->join('users', 'tickets.user_id', '=', 'users.id')
-                ->leftJoin('branches as b', 'users.branch_id', '=', 'b.id')
-                ->leftJoin('users as solvers', 'tickets.solved_by', '=', 'solvers.id')
-                ->select(
-                    'tickets.*',
-                    'users.name as user_name',
-                    'b.name as br_name',
-                    'solvers.name as solved_by_name'
-                )
-                ->orderBy('tickets.created_at', 'desc');
+{
+    $query = DB::table('tickets')
+        ->join('users', 'tickets.user_id', '=', 'users.id')
+        ->leftJoin('branches as b', 'users.branch_id', '=', 'b.id')
+        ->leftJoin('users as solvers', 'tickets.solved_by', '=', 'solvers.id')
+        ->leftJoin('priorities', 'tickets.priority_id', '=', 'priorities.id')
+        ->leftJoin('categories', 'tickets.category_id', '=', 'categories.id')
+        ->select(
+            'tickets.*',
+            'users.name as user_name',
+            'b.name as br_name',
+            'solvers.name as solved_by_name',
+            'priorities.name as priority_name',
+            'categories.name as category_name'
+        )
+        ->orderBy('tickets.created_at', 'desc');
 
-            if (auth()->user()->role != 1) {
-                $query->where('tickets.user_id', auth()->id());
-            }
+    if (auth()->user()->role != 1) {
+        $query->where('tickets.user_id', auth()->id());
+    }
 
-            $tickets = $query->get();
+    $tickets = $query->get();
 
-            return view('tickets.index', compact('tickets'));
-        }
+    return view('tickets.index', compact('tickets'));
+}
 
-    public function create()
+
+   public function create()
     {
-         $branches = DB::table('branches')->select('id', 'name')->get();
-        return view('tickets.create', compact('branches'));
-        
+        $branches = DB::table('branches')->select('id', 'name')->get();
+        $priorities = DB::table('priorities')->select('id', 'name')->get();
+        $categories = DB::table('categories')->select('id', 'name')->get();
+
+        return view('tickets.create', compact('branches', 'priorities', 'categories'));
     }
 
     public function store(Request $request)
@@ -44,6 +51,9 @@ class TicketController extends Controller
             'description' => 'required|string',
             'contact_person' => 'nullable|string|max:255',
             'attachment' => 'nullable|file|mimes:jpg,jpeg,png,pdf,doc,docx,xlsx|max:2048',
+            'priority_id' => 'nullable|exists:priorities,id',
+            'category_id' => 'nullable|exists:categories,id',
+            'branch_id' => 'nullable|integer|exists:branches,id',
         ]);
 
         $filePath = null;
@@ -61,11 +71,13 @@ class TicketController extends Controller
         }
 
         DB::table('tickets')->insert([
-            'user_id' => $user->id,
+            'user_id' => auth()->id(),
             'subject' => $request->subject,
             'description' => $request->description,
             'contact_person' => $request->contact_person,
-            'attachment' => $filePath,
+            'attachment' => $filePath ?? null,
+            'priority_id' => $request->priority_id,
+            'category_id' => $request->category_id,
             'status' => 0,
             'created_at' => now(),
             'updated_at' => now(),
@@ -77,6 +89,8 @@ class TicketController extends Controller
                 'description' => $request->description,
                 'contact_person' => $request->contact_person,
                 'attachment' => $filePath,
+                'priority_id' => $request->priority_id,
+                'category_id' => $request->category_id,
                 'status' => 0,
                 'created_at' => now(),
                 'updated_at' => now(),

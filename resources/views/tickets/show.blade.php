@@ -15,7 +15,7 @@
                     <p class="mb-1"><strong>Subject:</strong> {{ $ticket->subject }}</p>
                 </div>
                 <div class="text-end">
-                    <p class="mb-1"><strong>Created At:</strong> {{ \Carbon\Carbon::parse($ticket->created_at)->format('d M, Y h:i A') }}</p>
+                    <p class="mb-1"><strong>Created at:</strong> {{ \Carbon\Carbon::parse($ticket->created_at)->format('d M, Y h:i A') }}</p>
                     @if(!empty($ticket->contact_person))
                         <p class="mb-0"><strong>Contact Person:</strong> {{ $ticket->contact_person }}</p>
                     @endif

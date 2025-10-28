@@ -31,6 +31,22 @@
                     </select>
                 </div>
             @endif
+            <label for="priority_id" class="form-label">Set Priority</label>
+            <select name="priority_id" id="priority_id" class="form-select">
+                <option value="">-- Select Priority --</option>
+                @foreach($priorities as $priority)
+                    <option value="{{ $priority->id }}">{{ $priority->name }}</option>
+                @endforeach
+            </select>
+
+            <label for="category_id" class="form-label">Select Category</label>
+            <select name="category_id" id="category_id" class="form-select">
+                <option value="">-- Select Category --</option>
+                @foreach($categories as $category)
+                    <option value="{{ $category->id }}">{{ $category->name }}</option>
+                @endforeach
+            </select>
+
 
     <div class="mb-3">
         <label for="subject" class="form-label">Subject</label>
