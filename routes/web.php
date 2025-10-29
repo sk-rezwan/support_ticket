@@ -2,6 +2,7 @@
 
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\Auth\LoginController;
+use App\Http\Controllers\DashboardController;
 use App\Http\Controllers\TicketController;
 use App\Http\Controllers\ReportsController;
 use App\Http\Controllers\CategoryController;
@@ -11,6 +12,7 @@ Route::get('/login', [LoginController::class, 'showLoginForm'])->middleware('gue
 Route::post('/login', [LoginController::class, 'login'])->middleware('guest');
 
 Route::middleware('auth')->group(function () {
+    Route::get('/dashboard', [DashboardController::class, 'index'])->name('dashboard');
     Route::get('/tickets', [TicketController::class, 'index'])->name('tickets.index');
     // CRUD ticket
     Route::get('/tickets/create', [TicketController::class, 'create'])->name('tickets.create');
@@ -31,7 +33,7 @@ Route::middleware('auth')->group(function () {
     Route::post('/logout', [LoginController::class, 'logout'])->name('logout');
 
     //redirect to login
-     Route::get('/dashboard', function () {
-        return redirect('/tickets');
-    })->name('dashboard');
+    //  Route::get('/dashboard', function () {
+    //     return redirect('/tickets');
+    // })->name('dashboard');
 });

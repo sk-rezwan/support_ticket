@@ -35,13 +35,15 @@ class TicketController extends Controller
 }
 
 
-   public function create()
+   public function create(Request $request)
     {
         $branches = DB::table('branches')->select('id', 'name')->get();
         $priorities = DB::table('priorities')->select('id', 'name')->get();
         $categories = DB::table('categories')->select('id', 'name')->get();
 
-        return view('tickets.create', compact('branches', 'priorities', 'categories'));
+        $selectedCategory = $request->category; // get category from query string
+
+        return view('tickets.create', compact('branches', 'priorities', 'categories', 'selectedCategory'));
     }
 
     public function store(Request $request)

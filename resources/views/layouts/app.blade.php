@@ -3,6 +3,9 @@
 <head>
     <title>IT Help Desk & Support</title>
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
+    <!-- Font Awesome 5 (recommended) -->
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css" rel="stylesheet">
+
     <style>
         body {
             overflow-x: hidden;
@@ -48,7 +51,7 @@
                 <h4>CDIP</h4>
                 <ul class="nav flex-column">
                     <li class="nav-item">
-                        <a class="nav-link" href="{{ url('/tickets') }}">Dashboard</a>
+                        <a class="nav-link" href="{{ url('/dashboard') }}">Dashboard</a>
                     </li>
                     <li class="nav-item">
                         <a class="nav-link" href="{{ url('/tickets') }}">Tickets</a>
