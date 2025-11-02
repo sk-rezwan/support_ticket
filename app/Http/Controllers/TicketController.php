@@ -10,29 +10,28 @@ class TicketController extends Controller
     public function index()
 {
     $query = DB::table('tickets')
-        ->join('users', 'tickets.user_id', '=', 'users.id')
-        ->leftJoin('branches as b', 'users.branch_id', '=', 'b.id')
-        ->leftJoin('users as solvers', 'tickets.solved_by', '=', 'solvers.id')
-        ->leftJoin('priorities', 'tickets.priority_id', '=', 'priorities.id')
-        ->leftJoin('categories', 'tickets.category_id', '=', 'categories.id')
-        ->select(
-            'tickets.*',
-            'users.name as user_name',
-            'b.name as br_name',
-            'solvers.name as solved_by_name',
-            'priorities.name as priority_name',
-            'categories.name as category_name'
-        )
-        ->orderBy('tickets.created_at', 'desc');
+    ->leftJoin('branches as b', 'tickets.user_id', '=', 'b.id') // ✅ user_id now points to branch id
+    ->leftJoin('users as solvers', 'tickets.solved_by', '=', 'solvers.id')
+    ->leftJoin('priorities', 'tickets.priority_id', '=', 'priorities.id')
+    ->leftJoin('categories', 'tickets.category_id', '=', 'categories.id')
+    ->select(
+        'tickets.*',
+        'b.name as br_name', //branch name
+        'solvers.name as solved_by_name',
+        'priorities.name as priority_name',
+        'categories.name as category_name'
+    )
+    ->orderBy('tickets.created_at', 'desc');
 
-    if (auth()->user()->role != 1) {
-        $query->where('tickets.user_id', auth()->id());
+        // Normal users: show only their branch tickets
+        if (auth()->user()->role != 1) {
+        $query->where('tickets.user_id', auth()->user()->branch_id);
     }
 
-    $tickets = $query->get();
+        $tickets = $query->get();
 
-    return view('tickets.index', compact('tickets'));
-}
+        return view('tickets.index', compact('tickets'));
+    }
 
 
    public function create(Request $request)
@@ -73,7 +72,7 @@ class TicketController extends Controller
         }
 
         DB::table('tickets')->insert([
-            'user_id' => auth()->id(),
+            'user_id' => $request->branch_id,
             'subject' => $request->subject,
             'description' => $request->description,
             'contact_person' => $request->contact_person,
@@ -86,7 +85,8 @@ class TicketController extends Controller
         ]);
     } else {
             DB::table('tickets')->insert([
-                'user_id' => auth()->id(),
+                
+                'user_id' => auth()->user()->branch_id,
                 'subject' => $request->subject,
                 'description' => $request->description,
                 'contact_person' => $request->contact_person,
