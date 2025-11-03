@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: 127.0.0.1:3306
--- Generation Time: Oct 17, 2025 at 06:39 PM
+-- Generation Time: Nov 03, 2025 at 04:25 PM
 -- Server version: 8.0.31
 -- PHP Version: 8.2.29
 
@@ -35,7 +35,7 @@ CREATE TABLE IF NOT EXISTS `branches` (
   `created_at` timestamp NULL DEFAULT NULL,
   `updated_at` timestamp NULL DEFAULT NULL,
   PRIMARY KEY (`id`)
-) ENGINE=MyISAM AUTO_INCREMENT=4 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+) ENGINE=MyISAM AUTO_INCREMENT=5 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 --
 -- Dumping data for table `branches`
@@ -44,7 +44,85 @@ CREATE TABLE IF NOT EXISTS `branches` (
 INSERT INTO `branches` (`id`, `name`, `branch_code`, `created_at`, `updated_at`) VALUES
 (1, 'Kuti', 1, NULL, NULL),
 (2, 'Dharkhar', 2, NULL, NULL),
-(3, 'Chargas', 3, NULL, NULL);
+(3, 'Chargas', 3, NULL, NULL),
+(4, 'Head Office', 9999, NULL, NULL);
+
+-- --------------------------------------------------------
+
+--
+-- Table structure for table `categories`
+--
+
+DROP TABLE IF EXISTS `categories`;
+CREATE TABLE IF NOT EXISTS `categories` (
+  `id` bigint UNSIGNED NOT NULL AUTO_INCREMENT,
+  `name` varchar(191) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NOT NULL,
+  `created_at` timestamp NULL DEFAULT NULL,
+  `updated_at` timestamp NULL DEFAULT NULL,
+  PRIMARY KEY (`id`),
+  UNIQUE KEY `categories_name_unique` (`name`)
+) ENGINE=MyISAM AUTO_INCREMENT=5 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+
+--
+-- Dumping data for table `categories`
+--
+
+INSERT INTO `categories` (`id`, `name`, `created_at`, `updated_at`) VALUES
+(1, 'Software Support', NULL, NULL),
+(2, 'Hardware Support', NULL, NULL),
+(3, 'Email or Outlook Support', NULL, NULL),
+(4, 'General Inquiry', NULL, NULL);
+
+-- --------------------------------------------------------
+
+--
+-- Table structure for table `priorities`
+--
+
+DROP TABLE IF EXISTS `priorities`;
+CREATE TABLE IF NOT EXISTS `priorities` (
+  `id` bigint UNSIGNED NOT NULL AUTO_INCREMENT,
+  `name` varchar(191) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NOT NULL,
+  `created_at` timestamp NULL DEFAULT NULL,
+  `updated_at` timestamp NULL DEFAULT NULL,
+  PRIMARY KEY (`id`),
+  UNIQUE KEY `priorities_name_unique` (`name`)
+) ENGINE=MyISAM AUTO_INCREMENT=5 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+
+--
+-- Dumping data for table `priorities`
+--
+
+INSERT INTO `priorities` (`id`, `name`, `created_at`, `updated_at`) VALUES
+(1, 'Low', NULL, NULL),
+(2, 'Medium', NULL, NULL),
+(3, 'High', NULL, NULL),
+(4, 'Urgent', NULL, NULL);
+
+-- --------------------------------------------------------
+
+--
+-- Table structure for table `roles`
+--
+
+DROP TABLE IF EXISTS `roles`;
+CREATE TABLE IF NOT EXISTS `roles` (
+  `id` bigint UNSIGNED NOT NULL AUTO_INCREMENT,
+  `name` varchar(191) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NOT NULL,
+  `created_at` timestamp NULL DEFAULT NULL,
+  `updated_at` timestamp NULL DEFAULT NULL,
+  PRIMARY KEY (`id`),
+  UNIQUE KEY `roles_name_unique` (`name`)
+) ENGINE=MyISAM AUTO_INCREMENT=4 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+
+--
+-- Dumping data for table `roles`
+--
+
+INSERT INTO `roles` (`id`, `name`, `created_at`, `updated_at`) VALUES
+(1, 'Admin', NULL, NULL),
+(2, 'Engineer', NULL, NULL),
+(3, 'Branch', NULL, NULL);
 
 -- --------------------------------------------------------
 
@@ -59,23 +137,45 @@ CREATE TABLE IF NOT EXISTS `tickets` (
   `subject` varchar(255) COLLATE utf8mb4_general_ci NOT NULL,
   `description` text COLLATE utf8mb4_general_ci NOT NULL,
   `status` int DEFAULT '0',
+  `priority_id` int DEFAULT NULL,
+  `category_id` int DEFAULT NULL,
   `solved_by` varchar(333) COLLATE utf8mb4_general_ci DEFAULT NULL,
+  `contact_person` varchar(191) COLLATE utf8mb4_general_ci DEFAULT NULL,
+  `attachment` varchar(191) COLLATE utf8mb4_general_ci DEFAULT NULL,
   `created_at` timestamp NULL DEFAULT CURRENT_TIMESTAMP,
   `updated_at` timestamp NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
   PRIMARY KEY (`id`),
   KEY `user_id` (`user_id`)
-) ENGINE=MyISAM AUTO_INCREMENT=6 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+) ENGINE=MyISAM AUTO_INCREMENT=32 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 --
 -- Dumping data for table `tickets`
 --
 
-INSERT INTO `tickets` (`id`, `user_id`, `subject`, `description`, `status`, `solved_by`, `created_at`, `updated_at`) VALUES
-(1, 6, 'test ticket', 'test description test description test description test description test description', 1, NULL, '2025-06-01 02:45:11', '2025-06-21 14:37:03'),
-(2, 2, 'Branch test create ticket 1', 'A problem description in IT, also known as a problem statement, clearly defines an issue within an IT system or application. It aims to pinpoint the problem, its impact, and the desired resolution, ensuring everyone involved understands the issue and works towards the same goal.', 1, '6', '2025-06-01 18:00:00', '2025-06-21 14:37:07'),
-(3, 3, 'test ticket issue', 'test ticket issuetest ticket issuetest ticket issuetest ticket issuetest ticket issue', 2, '1', '2025-06-03 14:37:40', '2025-06-21 14:37:48'),
-(4, 7, 'CDIP EYE Day end problem', 'Day end shows 16 June. Day back needed 15 June.', 0, '4', '2025-06-03 18:00:00', '2025-06-21 14:37:52'),
-(5, 8, 'Chargas Ianctive delete', 'Sir, SL. 155003 inactive delete please.', 2, '4', '2025-06-04 18:00:00', '2025-06-21 14:38:36');
+INSERT INTO `tickets` (`id`, `user_id`, `subject`, `description`, `status`, `priority_id`, `category_id`, `solved_by`, `contact_person`, `attachment`, `created_at`, `updated_at`) VALUES
+(29, 3, 'Test Chargas', 'Test Chargas', 1, 2, 1, '4', NULL, NULL, '2025-11-02 11:53:05', '2025-11-02 11:53:15'),
+(30, 4, 'Test HO', 'Test HO', 0, 4, 4, NULL, 'Nafis FM', NULL, '2025-11-02 11:53:47', '2025-11-02 11:53:47'),
+(31, 1, 'PC Issue', 'Motherboard problem', 0, 3, 2, NULL, 'arun 0131301111', NULL, '2025-11-02 11:58:18', '2025-11-02 11:58:18'),
+(28, 2, 'test Dharkhar', 'test Dharkhar', 0, 2, 2, NULL, NULL, NULL, '2025-11-02 11:52:36', '2025-11-02 11:52:36');
+
+-- --------------------------------------------------------
+
+--
+-- Table structure for table `ticket_replies`
+--
+
+DROP TABLE IF EXISTS `ticket_replies`;
+CREATE TABLE IF NOT EXISTS `ticket_replies` (
+  `id` bigint UNSIGNED NOT NULL AUTO_INCREMENT,
+  `ticket_id` bigint UNSIGNED NOT NULL,
+  `user_id` bigint UNSIGNED NOT NULL,
+  `message` text CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NOT NULL,
+  `created_at` timestamp NULL DEFAULT NULL,
+  `updated_at` timestamp NULL DEFAULT NULL,
+  PRIMARY KEY (`id`),
+  KEY `ticket_replies_ticket_id_foreign` (`ticket_id`),
+  KEY `ticket_replies_user_id_foreign` (`user_id`)
+) ENGINE=MyISAM DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
 -- --------------------------------------------------------
 
@@ -91,26 +191,26 @@ CREATE TABLE IF NOT EXISTS `users` (
   `email_verified_at` timestamp NULL DEFAULT NULL,
   `password` varchar(255) COLLATE utf8mb4_general_ci NOT NULL,
   `remember_token` varchar(100) COLLATE utf8mb4_general_ci DEFAULT NULL,
-  `role` enum('admin','branch') COLLATE utf8mb4_general_ci DEFAULT 'branch',
+  `role` int NOT NULL,
+  `role_id` int DEFAULT NULL,
   `branch_id` bigint UNSIGNED DEFAULT NULL,
   `created_at` timestamp NULL DEFAULT CURRENT_TIMESTAMP,
   `updated_at` timestamp NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
   PRIMARY KEY (`id`),
   UNIQUE KEY `email` (`email`)
-) ENGINE=MyISAM AUTO_INCREMENT=9 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+) ENGINE=MyISAM AUTO_INCREMENT=10 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 --
 -- Dumping data for table `users`
 --
 
-INSERT INTO `users` (`id`, `name`, `email`, `email_verified_at`, `password`, `remember_token`, `role`, `branch_id`, `created_at`, `updated_at`) VALUES
-(1, 'F M Nafis', 'admin@example.com', NULL, '$2y$10$.mFhM9dA9ByLG4tRqMjs0eLrl5QDvkCdHxbAV355ROvlMzwWSREqS', NULL, 'admin', NULL, '2025-06-13 02:28:57', '2025-06-20 18:28:56'),
-(2, 'Branch One', 'branch1@example.com', NULL, '$2y$10$aozX6iRlxCP1.5PznkORXOjNwlwrz1Jn/b8phEsOEk/sEsIKP0es6', NULL, 'branch', 1, '2025-06-13 02:28:57', '2025-06-13 02:28:57'),
-(3, 'Branch Two', 'branch2@example.com', NULL, '$2y$10$mh1QWO8kfx6dkG3nWoqM1.w0RDyHz4s/tJYpiZLedWngRJCX83Nw.', NULL, 'branch', 2, '2025-06-13 02:28:57', '2025-06-13 02:28:57'),
-(4, 'Rezwan', 'rezwanul@cdipbd.org', NULL, '$2y$10$opdPg8cNFG2WGWtNXKMqW.gmz8IgXQEivRzxMbnIHc/rkK/nvzd3S', NULL, 'admin', NULL, '2025-06-13 02:28:57', '2025-06-20 18:27:07'),
-(6, 'Dibya', 'admin@mail.com', NULL, '$2y$10$Z4k9sLDWiTiP77Xuzsdjm.Wi8MwEGj7y1TNlC.JOqYs0HjylT2Qhe', NULL, 'admin', NULL, '2025-06-13 02:28:57', '2025-06-20 18:27:21'),
-(7, 'Kuti', 'kuti001@cdipbd.org', NULL, '$2y$10$mh1QWO8kfx6dkG3nWoqM1.w0RDyHz4s/tJYpiZLedWngRJCX83Nw.', NULL, 'branch', 2, '2025-06-13 02:28:57', '2025-06-15 17:04:03'),
-(8, 'Chargas BM', 'chargas003@cdipbd.org', NULL, '$2y$10$mh1QWO8kfx6dkG3nWoqM1.w0RDyHz4s/tJYpiZLedWngRJCX83Nw.', NULL, 'branch', 3, '2025-06-13 02:28:57', '2025-06-15 17:04:03');
+INSERT INTO `users` (`id`, `name`, `email`, `email_verified_at`, `password`, `remember_token`, `role`, `role_id`, `branch_id`, `created_at`, `updated_at`) VALUES
+(1, 'F M Nafis', 'admin@example.com', NULL, 'e10adc3949ba59abbe56e057f20f883e', NULL, 1, NULL, 4, '2025-06-13 02:28:57', '2025-11-02 17:19:46'),
+(9, 'Dharkhar', 'dharkha4@cdipbd.org', NULL, 'e10adc3949ba59abbe56e057f20f883e', NULL, 3, NULL, 2, '2025-06-13 02:28:57', '2025-11-02 17:38:46'),
+(4, 'Rezwan', 'rezwanul@cdipbd.org', NULL, 'e10adc3949ba59abbe56e057f20f883e', NULL, 1, NULL, 4, '2025-06-13 02:28:57', '2025-11-02 17:19:50'),
+(6, 'Dibya', 'admin@mail.com', NULL, 'e10adc3949ba59abbe56e057f20f883e', NULL, 2, NULL, 4, '2025-06-13 02:28:57', '2025-11-02 17:19:54'),
+(7, 'Kuti', 'kuti001@cdipbd.org', NULL, 'e10adc3949ba59abbe56e057f20f883e', NULL, 3, NULL, 1, '2025-06-13 02:28:57', '2025-11-02 17:18:53'),
+(8, 'Chargas', 'chargas003@cdipbd.org', NULL, 'e10adc3949ba59abbe56e057f20f883e', NULL, 3, NULL, 3, '2025-06-13 02:28:57', '2025-11-02 17:54:45');
 COMMIT;
 
 /*!40101 SET CHARACTER_SET_CLIENT=@OLD_CHARACTER_SET_CLIENT */;
