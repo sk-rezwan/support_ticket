@@ -103,23 +103,83 @@ class TicketController extends Controller
     }
 
     public function show($id)
-    {
-        $ticket = DB::table('tickets')->where('id', $id)->first();
-        return view('tickets.show', compact('ticket'));
+{
+    $ticket = DB::table('tickets')
+        ->leftJoin('users as solvers', 'tickets.solved_by', '=', 'solvers.id')
+        ->leftJoin('categories', 'tickets.category_id', '=', 'categories.id')
+        ->leftJoin('priorities', 'tickets.priority_id', '=', 'priorities.id')
+        ->select(
+            'tickets.*',
+            'solvers.name as solved_by_name',
+            'categories.name as category_name',
+            'priorities.name as priority_name'
+        )
+        ->where('tickets.id', $id)
+        ->first();
+
+    if (!$ticket) {
+        abort(404);
     }
 
-    public function update(Request $request, $id)
+    $replies = DB::table('ticket_replies')
+        ->join('users', 'ticket_replies.user_id', '=', 'users.id')
+        ->where('ticket_replies.ticket_id', $id)
+        ->orderBy('ticket_replies.created_at', 'asc')
+        ->select(
+            'ticket_replies.*',
+            'users.name as user_name'
+        )
+        ->get();
+
+    return view('tickets.show', compact('ticket', 'replies'));
+}
+public function storeReply(Request $request, $id)
     {
-        if (auth()->user()->role !== 1) {
-            abort(403);
+        // Allow only Admin (1) and Engineer (3)
+        if (!in_array(auth()->user()->role, [1, 3])) {
+            abort(403, 'Unauthorized');
         }
 
-        DB::table('tickets')->where('id', $id)->update([
-            'solved_by' => auth()->id(),
-            'status' => $request->status,
+        $request->validate([
+            'message' => 'required|string',
+        ]);
+
+        DB::table('ticket_replies')->insert([
+            'ticket_id'  => $id,
+            'user_id'    => auth()->id(),
+            'message'    => $request->message,
+            'created_at' => now(),
             'updated_at' => now(),
         ]);
 
-        return redirect()->route('tickets.index');
+        return redirect()
+            ->route('tickets.show', $id)
+            ->with('success', 'Reply added successfully.');
     }
+
+    public function update(Request $request, $id)
+{
+    // Only Admin (role 1) can update status
+    if (auth()->user()->role != 1) {
+        abort(403, 'Unauthorized');
+    }
+
+    $request->validate([
+        'status' => 'required|in:0,1,2',
+    ]);
+
+    DB::table('tickets')
+        ->where('id', $id)
+        ->update([
+            'status'     => $request->status,
+            'solved_by'  => $request->status == 2 ? auth()->id() : null, // solver name
+            'updated_at' => now(),
+        ]);
+
+    return redirect()
+        ->route('tickets.index')
+        ->with('success', 'Ticket status updated successfully.');
+}
+
+
 }

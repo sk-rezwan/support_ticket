@@ -25,6 +25,10 @@ Route::middleware('auth')->group(function () {
     Route::post('/categories', [CategoryController::class, 'store'])->name('categories.store');
     Route::post('/categories/update/{id}', [CategoryController::class, 'update'])->name('categories.update');
     Route::get('/categories/delete/{id}', [CategoryController::class, 'destroy'])->name('categories.destroy');
+    // replies
+
+    Route::post('/tickets/{id}/replies', [TicketController::class, 'storeReply'])
+    ->name('tickets.replies.store');
 
     // reports
     Route::get('/reports/branch', [ReportsController::class, 'branchReport']);

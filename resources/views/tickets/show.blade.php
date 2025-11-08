@@ -9,6 +9,14 @@
         </div>
 
         <div class="card-body">
+
+            {{-- Flash message --}}
+            @if(session('success'))
+                <div class="alert alert-success">
+                    {{ session('success') }}
+                </div>
+            @endif
+
             {{-- Header Section --}}
             <div class="d-flex justify-content-between align-items-start flex-wrap mb-3">
                 <div>
@@ -40,7 +48,7 @@
                 </div>
             @endif
 
-            {{-- Status Section (moved below attachment) --}}
+            {{-- Status Section --}}
             <div class="mb-4">
                 <p class="mb-1"><strong>Status:</strong>
                     @if ($ticket->status == 0)
@@ -56,7 +64,50 @@
                 @endif
             </div>
 
-            {{-- Admin Section --}}
+            {{-- Replies Section --}}
+            <hr>
+            <h5 class="mb-3">💬 Conversation</h5>
+
+            @if($replies->isEmpty())
+                <p class="text-muted">No replies yet.</p>
+            @else
+                <div class="mb-4">
+                    @foreach($replies as $reply)
+                        <div class="border rounded p-3 mb-2 bg-light">
+                            <div class="d-flex justify-content-between">
+                                <strong>{{ $reply->user_name }}</strong>
+                                <small class="text-muted">
+                                    {{ \Carbon\Carbon::parse($reply->created_at)->format('d M, Y h:i A') }}
+                                </small>
+                            </div>
+                            <div class="mt-2">
+                                {!! nl2br(e($reply->message)) !!}
+                            </div>
+                        </div>
+                    @endforeach
+                </div>
+            @endif
+
+            {{-- Reply Form: only for Admin (1) or Engineer (3) --}}
+            @if(in_array(auth()->user()->role, [1, 3]))
+                <div class="mt-4">
+                    <h5 class="mb-3">➕ Add a Reply</h5>
+                    <form method="POST" action="{{ route('tickets.replies.store', $ticket->id) }}">
+                        @csrf
+
+                        <div class="mb-3">
+                            <label for="message" class="form-label">Message</label>
+                            <textarea name="message" id="message" rows="4" class="form-control" required>{{ old('message') }}</textarea>
+                        </div>
+
+                        <button type="submit" class="btn btn-primary btn-sm">
+                            <i class="bi bi-send"></i> Submit Reply
+                        </button>
+                    </form>
+                </div>
+            @endif
+
+            {{-- Admin Section: status update --}}
             @if (auth()->user()->role == 1)
                 <hr>
                 <div class="d-flex justify-content-between align-items-center flex-wrap mb-2">

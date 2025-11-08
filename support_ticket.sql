@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: 127.0.0.1:3306
--- Generation Time: Nov 03, 2025 at 04:25 PM
+-- Generation Time: Nov 08, 2025 at 12:37 PM
 -- Server version: 8.0.31
 -- PHP Version: 8.2.29
 
@@ -146,16 +146,20 @@ CREATE TABLE IF NOT EXISTS `tickets` (
   `updated_at` timestamp NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
   PRIMARY KEY (`id`),
   KEY `user_id` (`user_id`)
-) ENGINE=MyISAM AUTO_INCREMENT=32 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+) ENGINE=MyISAM AUTO_INCREMENT=36 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 --
 -- Dumping data for table `tickets`
 --
 
 INSERT INTO `tickets` (`id`, `user_id`, `subject`, `description`, `status`, `priority_id`, `category_id`, `solved_by`, `contact_person`, `attachment`, `created_at`, `updated_at`) VALUES
+(33, 2, 'test select cat', 'test select cat', 0, 2, 4, NULL, NULL, NULL, '2025-11-03 12:56:27', '2025-11-03 12:56:27'),
+(34, 1, 'text direct cat', 'text direct cat', 2, 3, 4, '4', NULL, NULL, '2025-11-03 12:56:54', '2025-11-08 06:27:15'),
+(35, 4, 'HRM Bill  back', 'bill option back', 0, 2, 1, NULL, 'Employee (HR)', NULL, '2025-11-03 13:04:29', '2025-11-03 13:04:29'),
 (29, 3, 'Test Chargas', 'Test Chargas', 1, 2, 1, '4', NULL, NULL, '2025-11-02 11:53:05', '2025-11-02 11:53:15'),
 (30, 4, 'Test HO', 'Test HO', 0, 4, 4, NULL, 'Nafis FM', NULL, '2025-11-02 11:53:47', '2025-11-02 11:53:47'),
-(31, 1, 'PC Issue', 'Motherboard problem', 0, 3, 2, NULL, 'arun 0131301111', NULL, '2025-11-02 11:58:18', '2025-11-02 11:58:18'),
+(31, 1, 'PC Issue', 'Motherboard problem', 1, 3, 2, NULL, 'arun 0131301111', NULL, '2025-11-02 11:58:18', '2025-11-08 06:22:06'),
+(32, 3, 'CDIP EYE Day end problem', 'need day back', 1, 3, 3, '4', 'BAC 01671137783', 'tickets/i4BCWPfBgESdYH6Mz4s7Uxq9yRcAExPVhngfqzG2.png', '2025-11-03 12:42:48', '2025-11-03 12:43:53'),
 (28, 2, 'test Dharkhar', 'test Dharkhar', 0, 2, 2, NULL, NULL, NULL, '2025-11-02 11:52:36', '2025-11-02 11:52:36');
 
 -- --------------------------------------------------------
@@ -175,7 +179,16 @@ CREATE TABLE IF NOT EXISTS `ticket_replies` (
   PRIMARY KEY (`id`),
   KEY `ticket_replies_ticket_id_foreign` (`ticket_id`),
   KEY `ticket_replies_user_id_foreign` (`user_id`)
-) ENGINE=MyISAM DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+) ENGINE=MyISAM AUTO_INCREMENT=4 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+
+--
+-- Dumping data for table `ticket_replies`
+--
+
+INSERT INTO `ticket_replies` (`id`, `ticket_id`, `user_id`, `message`, `created_at`, `updated_at`) VALUES
+(1, 35, 4, 'Your request for bill back option is proceed. Thanks !', '2025-11-08 06:08:20', '2025-11-08 06:08:20'),
+(2, 31, 4, 'test reply 1: Is Cooling fan working?', '2025-11-08 06:12:05', '2025-11-08 06:12:05'),
+(3, 31, 7, 'No sir, fan is not working.', '2025-11-08 06:16:31', '2025-11-08 06:16:31');
 
 -- --------------------------------------------------------
 
@@ -198,7 +211,7 @@ CREATE TABLE IF NOT EXISTS `users` (
   `updated_at` timestamp NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
   PRIMARY KEY (`id`),
   UNIQUE KEY `email` (`email`)
-) ENGINE=MyISAM AUTO_INCREMENT=10 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+) ENGINE=MyISAM AUTO_INCREMENT=13 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 --
 -- Dumping data for table `users`
@@ -206,11 +219,14 @@ CREATE TABLE IF NOT EXISTS `users` (
 
 INSERT INTO `users` (`id`, `name`, `email`, `email_verified_at`, `password`, `remember_token`, `role`, `role_id`, `branch_id`, `created_at`, `updated_at`) VALUES
 (1, 'F M Nafis', 'admin@example.com', NULL, 'e10adc3949ba59abbe56e057f20f883e', NULL, 1, NULL, 4, '2025-06-13 02:28:57', '2025-11-02 17:19:46'),
+(10, 'Polash', 'polash@cdipbd.org', NULL, 'e10adc3949ba59abbe56e057f20f883e', NULL, 2, NULL, 4, '2025-06-13 02:28:57', '2025-11-08 11:20:14'),
 (9, 'Dharkhar', 'dharkha4@cdipbd.org', NULL, 'e10adc3949ba59abbe56e057f20f883e', NULL, 3, NULL, 2, '2025-06-13 02:28:57', '2025-11-02 17:38:46'),
 (4, 'Rezwan', 'rezwanul@cdipbd.org', NULL, 'e10adc3949ba59abbe56e057f20f883e', NULL, 1, NULL, 4, '2025-06-13 02:28:57', '2025-11-02 17:19:50'),
-(6, 'Dibya', 'admin@mail.com', NULL, 'e10adc3949ba59abbe56e057f20f883e', NULL, 2, NULL, 4, '2025-06-13 02:28:57', '2025-11-02 17:19:54'),
+(6, 'Dibya', 'admin@mail.com', NULL, 'e10adc3949ba59abbe56e057f20f883e', NULL, 1, NULL, 4, '2025-06-13 02:28:57', '2025-11-08 11:19:12'),
 (7, 'Kuti', 'kuti001@cdipbd.org', NULL, 'e10adc3949ba59abbe56e057f20f883e', NULL, 3, NULL, 1, '2025-06-13 02:28:57', '2025-11-02 17:18:53'),
-(8, 'Chargas', 'chargas003@cdipbd.org', NULL, 'e10adc3949ba59abbe56e057f20f883e', NULL, 3, NULL, 3, '2025-06-13 02:28:57', '2025-11-02 17:54:45');
+(8, 'Chargas', 'chargas003@cdipbd.org', NULL, 'e10adc3949ba59abbe56e057f20f883e', NULL, 3, NULL, 3, '2025-06-13 02:28:57', '2025-11-02 17:54:45'),
+(11, 'Pronab Mondal', 'pronab@cdipbd.org', NULL, 'e10adc3949ba59abbe56e057f20f883e', NULL, 2, NULL, 4, '2025-06-13 02:28:57', '2025-11-08 11:20:14'),
+(12, 'Bulon', 'bulon@cdipbd.org', NULL, 'e10adc3949ba59abbe56e057f20f883e', NULL, 2, NULL, 4, '2025-06-13 02:28:57', '2025-11-08 11:20:14');
 COMMIT;
 
 /*!40101 SET CHARACTER_SET_CLIENT=@OLD_CHARACTER_SET_CLIENT */;
