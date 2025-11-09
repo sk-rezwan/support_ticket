@@ -66,7 +66,7 @@
 
             {{-- Replies Section --}}
             <hr>
-            <h5 class="mb-3">💬 Conversation</h5>
+            <h5 class="mb-3">💬 Replies</h5>
 
             @if($replies->isEmpty())
                 <p class="text-muted">No replies yet.</p>
@@ -88,8 +88,8 @@
                 </div>
             @endif
 
-            {{-- Reply Form: only for Admin (1) or Engineer (3) --}}
-            @if(in_array(auth()->user()->role, [1, 3]))
+            {{-- Reply Form: only for Admin (1) or Engineer (2) --}}
+            @if(in_array(auth()->user()->role, [1, 2]))
                 <div class="mt-4">
                     <h5 class="mb-3">➕ Add a Reply</h5>
                     <form method="POST" action="{{ route('tickets.replies.store', $ticket->id) }}">
@@ -108,7 +108,7 @@
             @endif
 
             {{-- Admin Section: status update --}}
-            @if (auth()->user()->role == 1)
+            @if (in_array(auth()->user()->role, [1,2]))
                 <hr>
                 <div class="d-flex justify-content-between align-items-center flex-wrap mb-2">
                     <h5 class="mb-3 mb-md-0">🛠 Update Ticket Status</h5>

@@ -8,20 +8,20 @@ use Illuminate\Http\Request;
 class TicketController extends Controller
 {
     public function index()
-{
-    $query = DB::table('tickets')
-    ->leftJoin('branches as b', 'tickets.user_id', '=', 'b.id') // ✅ user_id now points to branch id
-    ->leftJoin('users as solvers', 'tickets.solved_by', '=', 'solvers.id')
-    ->leftJoin('priorities', 'tickets.priority_id', '=', 'priorities.id')
-    ->leftJoin('categories', 'tickets.category_id', '=', 'categories.id')
-    ->select(
-        'tickets.*',
-        'b.name as br_name', //branch name
-        'solvers.name as solved_by_name',
-        'priorities.name as priority_name',
-        'categories.name as category_name'
-    )
-    ->orderBy('tickets.created_at', 'desc');
+    {
+        $query = DB::table('tickets')
+        ->leftJoin('branches as b', 'tickets.user_id', '=', 'b.id') // ✅ user_id now points to branch id
+        ->leftJoin('users as solvers', 'tickets.solved_by', '=', 'solvers.id')
+        ->leftJoin('priorities', 'tickets.priority_id', '=', 'priorities.id')
+        ->leftJoin('categories', 'tickets.category_id', '=', 'categories.id')
+        ->select(
+            'tickets.*',
+            'b.name as br_name', //branch name
+            'solvers.name as solved_by_name',
+            'priorities.name as priority_name',
+            'categories.name as category_name'
+        )
+        ->orderBy('tickets.created_at', 'desc');
 
         // Normal users: show only their branch tickets
         if (auth()->user()->role != 1) {
@@ -135,8 +135,8 @@ class TicketController extends Controller
 }
 public function storeReply(Request $request, $id)
     {
-        // Allow only Admin (1) and Engineer (3)
-        if (!in_array(auth()->user()->role, [1, 3])) {
+        // Allow only Admin (1) and Engineer (2)
+        if (!in_array(auth()->user()->role, [1, 2])) {
             abort(403, 'Unauthorized');
         }
 
@@ -159,8 +159,8 @@ public function storeReply(Request $request, $id)
 
     public function update(Request $request, $id)
 {
-    // Only Admin (role 1) can update status
-    if (auth()->user()->role != 1) {
+    // Only Admin and Engineer can update status
+    if (!in_array(auth()->user()->role, [1, 2])) {
         abort(403, 'Unauthorized');
     }
 
