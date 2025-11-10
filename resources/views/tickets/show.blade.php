@@ -48,6 +48,12 @@
                 </div>
             @endif
 
+            @if(!empty($ticket->assigned_to))
+                <p class="mb-0">
+                    <strong>Assigned Engineer:</strong> {{ $ticket->assigned_to_name ?? 'N/A' }}
+                </p>
+            @endif
+
             {{-- Status Section --}}
             <div class="mb-4">
                 <p class="mb-1"><strong>Status:</strong>
@@ -106,6 +112,46 @@
                     </form>
                 </div>
             @endif
+
+            @if(auth()->user()->role == 1)
+    <hr>
+    <div class="mt-3 mb-3">
+        <h5 class="mb-3">👨‍💻 Assign to Engineer</h5>
+
+        @if(session('error'))
+            <div class="alert alert-danger py-1 px-2 mb-2">
+                {{ session('error') }}
+            </div>
+        @endif
+
+        <form method="POST" action="{{ route('tickets.assign', $ticket->id) }}" class="d-flex flex-wrap align-items-center">
+            @csrf
+
+            <div class="me-2 mb-2">
+                <select name="engineer_id" class="form-control form-control-sm">
+                    <option value="">-- Select Engineer --</option>
+                    @foreach($engineers as $engineer)
+                        <option value="{{ $engineer->id }}"
+                            {{ $ticket->assigned_to == $engineer->id ? 'selected' : '' }}>
+                            {{ $engineer->name }}
+                        </option>
+                    @endforeach
+                </select>
+            </div>
+
+            <button type="submit" class="btn btn-sm btn-primary mb-2">
+                Assign
+            </button>
+        </form>
+
+        @if($ticket->assigned_to)
+            <p class="mt-2 mb-0">
+                <strong>Currently assigned to:</strong> {{ $ticket->assigned_to_name ?? 'Unknown' }}
+                    </p>
+                @endif
+            </div>
+        @endif
+
 
             {{-- Admin Section: status update --}}
             @if (in_array(auth()->user()->role, [1,2]))

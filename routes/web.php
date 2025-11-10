@@ -30,6 +30,10 @@ Route::middleware('auth')->group(function () {
     Route::post('/tickets/{id}/replies', [TicketController::class, 'storeReply'])
     ->name('tickets.replies.store');
 
+    // assign engineers
+    Route::post('/tickets/{id}/assign', [TicketController::class, 'assignEngineer'])
+    ->name('tickets.assign');
+
     // reports
     Route::get('/reports/branch', [ReportsController::class, 'branchReport']);
     

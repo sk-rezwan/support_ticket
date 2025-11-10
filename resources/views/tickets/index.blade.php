@@ -22,6 +22,7 @@
                         <th>Status</th>
                         <th>Date</th>
                         <th>Solved By</th>
+                        <th>Assigned To</th>
                         <th>Actions</th>
                     </tr>
                 </thead>
@@ -66,6 +67,8 @@
 
                             {{-- Solved By --}}
                             <td>{{ $ticket->solved_by_name ?? '—' }}</td>
+                            
+                            <td>{{ $ticket->assigned_to_name ?? '—' }}</td>
 
                             {{-- Actions --}}
                             <td class="text-center">
