@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: 127.0.0.1:3306
--- Generation Time: Nov 10, 2025 at 07:12 PM
+-- Generation Time: Nov 13, 2025 at 07:38 PM
 -- Server version: 8.0.31
 -- PHP Version: 8.2.29
 
@@ -196,6 +196,24 @@ INSERT INTO `ticket_replies` (`id`, `ticket_id`, `user_id`, `message`, `created_
 (6, 32, 11, 'ok got it', '2025-11-10 12:26:51', '2025-11-10 12:26:51'),
 (7, 36, 4, 'ok', '2025-11-10 12:55:24', '2025-11-10 12:55:24'),
 (8, 36, 12, 'working on it', '2025-11-10 12:56:28', '2025-11-10 12:56:28');
+
+-- --------------------------------------------------------
+
+--
+-- Table structure for table `ticket_status_logs`
+--
+
+DROP TABLE IF EXISTS `ticket_status_logs`;
+CREATE TABLE IF NOT EXISTS `ticket_status_logs` (
+  `id` int UNSIGNED NOT NULL AUTO_INCREMENT,
+  `ticket_id` int UNSIGNED NOT NULL,
+  `status` tinyint NOT NULL,
+  `changed_by` int UNSIGNED NOT NULL,
+  `created_at` timestamp NULL DEFAULT CURRENT_TIMESTAMP,
+  PRIMARY KEY (`id`),
+  KEY `ticket_id` (`ticket_id`),
+  KEY `status` (`status`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 -- --------------------------------------------------------
 

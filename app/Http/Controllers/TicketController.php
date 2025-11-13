@@ -151,7 +151,17 @@ class TicketController extends Controller
             ->select('id', 'name')
             ->get();
 
-        return view('tickets.show', compact('ticket', 'replies', 'engineers'));
+        $logRows = DB::table('ticket_status_logs')
+                    ->where('ticket_id', $id)
+                    ->orderBy('created_at','asc')
+                    ->get(['status','created_at']);
+
+        $pendingAt    = \Carbon\Carbon::parse($ticket->created_at);
+        $processingAt = $ticket->status >= 1 ? \Carbon\Carbon::parse($ticket->updated_at) : null;
+        $solvedAt     = $ticket->status == 2 ? \Carbon\Carbon::parse($ticket->updated_at) : null;
+
+
+        return view('tickets.show', compact('ticket', 'replies', 'engineers','pendingAt','processingAt','solvedAt'));
     }
 
 public function storeReply(Request $request, $id)
@@ -217,8 +227,19 @@ public function storeReply(Request $request, $id)
                     'updated_at' => now(),
                 ]);
 
+            // Log status change if changed
+
+            if ((int)$ticket->status !== (int)$request->status) {
+                DB::table('ticket_status_logs')->insert([
+                    'ticket_id'  => $id,
+                    'status'     => (int)$request->status,
+                    'changed_by' => auth()->id(),
+                    'created_at' => now(),
+                ]);
+            }
+
             return redirect()
-                ->route('tickets.index')
+                ->route('tickets.index', $id)
                 ->with('success', 'Ticket status updated successfully.');
         }
 

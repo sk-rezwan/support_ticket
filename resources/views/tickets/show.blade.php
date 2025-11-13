@@ -69,8 +69,40 @@
                     <p class="mb-0"><strong>Solved By:</strong> {{ $ticket->solved_by_name ?? 'N/A' }}</p>
                 @endif
             </div>
+{{-- Horizontal Status Timeline --}}
+    <div class="timeline-wrap my-4">
+        <ul class="timeline-horizontal">
+            @php
+                $current = (int) $ticket->status; // 0=pending,1=processing,2=solved
+                $steps = [
+                    ['label' => 'Pending',    'time' => $pendingAt],
+                    ['label' => 'Processing', 'time' => $processingAt],
+                    ['label' => 'Solved',     'time' => $solvedAt],
+                ];
+            @endphp
 
-            {{-- Replies Section --}}
+            @foreach($steps as $i => $step)
+                @php
+                    $isDone   = $current > $i;
+                    $isActive = $current == $i;
+                @endphp
+
+                <li class="timeline-step {{ $isDone ? 'done' : '' }} {{ $isActive ? 'active' : '' }}">
+                    <div class="dot"></div>
+                    <div class="label">{{ $step['label'] }}</div>
+                    <div class="time">
+                        @if($step['time'])
+                            {{ $step['time']->format('d M, Y h:i A') }}
+                        @else
+                            —
+                        @endif
+                    </div>
+                </li>
+            @endforeach
+        </ul>
+    </div>
+
+          {{-- Replies Section --}}
             <hr>
             <h5 class="mb-3">💬 Replies</h5>
 
@@ -182,4 +214,64 @@
         </div>
     </div>
 </div>
+
+<style>
+.timeline-wrap { width: 100%; overflow-x: auto; }
+.timeline-horizontal {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+    display: flex;
+    justify-content: space-between;
+    position: relative;
+    align-items: center;
+}
+.timeline-horizontal::before {
+    content: "";
+    position: absolute;
+    left: 0;
+    right: 0;
+    top: 26px;
+    height: 3px;
+    background: #e9ecef;
+    z-index: 1;
+}
+.timeline-step {
+    position: relative;
+    text-align: center;
+    flex: 1 1 0;
+    min-width: 140px;
+}
+.timeline-step .dot {
+    width: 14px;
+    height: 14px;
+    border-radius: 50%;
+    background: #adb5bd;
+    border: 3px solid #fff;
+    box-shadow: 0 0 0 3px #e9ecef;
+    margin: 0 auto;
+    position: relative;
+    z-index: 2;
+}
+.timeline-step.active .dot {
+    background: #008000	;
+    box-shadow: 0 0 0 3px rgba(36, 255, 65, 0.25);
+}
+.timeline-step.done .dot {
+    background: #5050ffff;
+    box-shadow: 0 0 0 3px rgba(33, 88, 164, 0.25);
+}
+.timeline-step .label {
+    margin-top: 11px;
+    font-weight: 600;
+    font-size: .95rem;
+}
+.timeline-step .time {
+    margin-top: 2px;
+    font-size: .8rem;
+    color: #6c757d;
+}
+</style>
+
+
 @endsection
