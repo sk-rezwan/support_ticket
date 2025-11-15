@@ -18,6 +18,7 @@
                         <th>Branch</th>
                         <th>Subject</th>
                         <th>Category</th>
+                        <th>Sub-Category</th>
                         <th>Priority</th>
                         <th>Status</th>
                         <th>Date</th>
@@ -33,8 +34,10 @@
                             <td>{{ $ticket->br_name }}</td>
                             <td>{{ $ticket->subject }}</td>
 
-                            {{-- Category --}}
+                            {{-- Category and Sub-Category--}}
                             <td>{{ $ticket->category_name ?? 'N/A' }}</td>
+
+                            <td>{{ $ticket->sub_category_name ?? 'N/A' }}</td>
 
                             {{-- Priority --}}
                             <td class="text-center">

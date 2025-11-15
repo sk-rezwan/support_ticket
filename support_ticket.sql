@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: 127.0.0.1:3306
--- Generation Time: Nov 13, 2025 at 07:38 PM
+-- Generation Time: Nov 15, 2025 at 06:10 PM
 -- Server version: 8.0.31
 -- PHP Version: 8.2.29
 
@@ -127,6 +127,32 @@ INSERT INTO `roles` (`id`, `name`, `created_at`, `updated_at`) VALUES
 -- --------------------------------------------------------
 
 --
+-- Table structure for table `sub_categories`
+--
+
+DROP TABLE IF EXISTS `sub_categories`;
+CREATE TABLE IF NOT EXISTS `sub_categories` (
+  `id` int UNSIGNED NOT NULL AUTO_INCREMENT,
+  `category_id` int UNSIGNED NOT NULL,
+  `name` varchar(191) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci DEFAULT NULL,
+  `created_at` timestamp NULL DEFAULT NULL,
+  `updated_at` timestamp NULL DEFAULT NULL,
+  PRIMARY KEY (`id`),
+  KEY `sub_categories_category_id_index` (`category_id`)
+) ENGINE=MyISAM AUTO_INCREMENT=4 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+
+--
+-- Dumping data for table `sub_categories`
+--
+
+INSERT INTO `sub_categories` (`id`, `category_id`, `name`, `created_at`, `updated_at`) VALUES
+(1, 1, 'CDIP EYE ISSUE', NULL, NULL),
+(2, 1, 'HRM ISSUE', NULL, NULL),
+(3, 1, 'SMART Move Mobile App related Issue', NULL, NULL);
+
+-- --------------------------------------------------------
+
+--
 -- Table structure for table `tickets`
 --
 
@@ -139,6 +165,7 @@ CREATE TABLE IF NOT EXISTS `tickets` (
   `status` int DEFAULT '0',
   `priority_id` int DEFAULT NULL,
   `category_id` int DEFAULT NULL,
+  `sub_category_id` int DEFAULT NULL,
   `assigned_to` int DEFAULT NULL,
   `solved_by` varchar(333) COLLATE utf8mb4_general_ci DEFAULT NULL,
   `contact_person` varchar(191) COLLATE utf8mb4_general_ci DEFAULT NULL,
@@ -147,22 +174,23 @@ CREATE TABLE IF NOT EXISTS `tickets` (
   `updated_at` timestamp NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
   PRIMARY KEY (`id`),
   KEY `user_id` (`user_id`)
-) ENGINE=MyISAM AUTO_INCREMENT=37 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+) ENGINE=MyISAM AUTO_INCREMENT=38 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 --
 -- Dumping data for table `tickets`
 --
 
-INSERT INTO `tickets` (`id`, `user_id`, `subject`, `description`, `status`, `priority_id`, `category_id`, `assigned_to`, `solved_by`, `contact_person`, `attachment`, `created_at`, `updated_at`) VALUES
-(33, 2, 'test select cat', 'test select cat', 0, 2, 4, NULL, NULL, NULL, NULL, '2025-11-03 12:56:27', '2025-11-03 12:56:27'),
-(34, 1, 'text direct cat', 'text direct cat', 2, 3, 4, NULL, '4', NULL, NULL, '2025-11-03 12:56:54', '2025-11-08 06:27:15'),
-(35, 4, 'HRM Bill  back', 'bill option back', 0, 2, 1, NULL, NULL, 'Employee (HR)', NULL, '2025-11-03 13:04:29', '2025-11-09 12:28:17'),
-(29, 3, 'Test Chargas', 'Test Chargas', 1, 2, 1, NULL, '4', NULL, NULL, '2025-11-02 11:53:05', '2025-11-02 11:53:15'),
-(30, 4, 'Test HO', 'Test HO', 2, 4, 4, NULL, '11', 'Nafis FM', NULL, '2025-11-02 11:53:47', '2025-11-09 12:28:31'),
-(31, 1, 'PC Issue', 'Motherboard problem', 1, 3, 2, 10, NULL, 'arun 0131301111', NULL, '2025-11-02 11:58:18', '2025-11-10 12:47:41'),
-(32, 3, 'CDIP EYE Day end problem', 'need day back', 2, 3, 3, 11, '11', 'BAC 01671137783', 'tickets/i4BCWPfBgESdYH6Mz4s7Uxq9yRcAExPVhngfqzG2.png', '2025-11-03 12:42:48', '2025-11-10 12:43:43'),
-(28, 2, 'test Dharkhar', 'test Dharkhar', 0, 2, 2, NULL, NULL, NULL, NULL, '2025-11-02 11:52:36', '2025-11-02 11:52:36'),
-(36, 2, 'test assign issue', 'assign test', 2, 3, 1, 12, '12', 'bm 013130111022', NULL, '2025-11-10 12:55:07', '2025-11-10 12:56:41');
+INSERT INTO `tickets` (`id`, `user_id`, `subject`, `description`, `status`, `priority_id`, `category_id`, `sub_category_id`, `assigned_to`, `solved_by`, `contact_person`, `attachment`, `created_at`, `updated_at`) VALUES
+(33, 2, 'test select cat', 'test select cat', 0, 2, 4, NULL, NULL, NULL, NULL, NULL, '2025-11-03 12:56:27', '2025-11-03 12:56:27'),
+(34, 1, 'text direct cat', 'text direct cat', 2, 3, 4, NULL, NULL, '4', NULL, NULL, '2025-11-03 12:56:54', '2025-11-08 06:27:15'),
+(35, 4, 'HRM Bill  back', 'bill option back', 0, 2, 1, NULL, NULL, NULL, 'Employee (HR)', NULL, '2025-11-03 13:04:29', '2025-11-09 12:28:17'),
+(29, 3, 'Test Chargas', 'Test Chargas', 1, 2, 1, NULL, NULL, '4', NULL, NULL, '2025-11-02 11:53:05', '2025-11-02 11:53:15'),
+(30, 4, 'Test HO', 'Test HO', 2, 4, 4, NULL, NULL, '11', 'Nafis FM', NULL, '2025-11-02 11:53:47', '2025-11-09 12:28:31'),
+(31, 1, 'PC Issue', 'Motherboard problem', 1, 3, 2, NULL, 10, NULL, 'arun 0131301111', NULL, '2025-11-02 11:58:18', '2025-11-10 12:47:41'),
+(32, 3, 'CDIP EYE Day end problem', 'need day back', 2, 3, 3, NULL, 11, '11', 'BAC 01671137783', 'tickets/i4BCWPfBgESdYH6Mz4s7Uxq9yRcAExPVhngfqzG2.png', '2025-11-03 12:42:48', '2025-11-10 12:43:43'),
+(28, 2, 'test Dharkhar', 'test Dharkhar', 0, 2, 2, NULL, NULL, NULL, NULL, NULL, '2025-11-02 11:52:36', '2025-11-02 11:52:36'),
+(36, 2, 'test assign issue', 'assign test', 2, 3, 1, 1, 12, '12', 'bm 013130111022', NULL, '2025-11-10 12:55:07', '2025-11-15 16:49:48'),
+(37, 1, 'app not loggin in', 'shows network error alert', 0, 4, 1, 3, NULL, NULL, 'Nafiz 453', NULL, '2025-11-15 11:04:05', '2025-11-15 11:04:05');
 
 -- --------------------------------------------------------
 

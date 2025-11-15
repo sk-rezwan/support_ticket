@@ -22,6 +22,10 @@
                 <div>
                     <p class="mb-1"><strong>Subject:</strong> {{ $ticket->subject }}</p>
                 </div>
+                <p class="mb-1"><strong>Category:</strong> {{ $ticket->category_name ?? 'N/A' }}</p>
+                @if(!empty($ticket->sub_category_name))
+                    <p class="mb-1"><strong>Sub Category:</strong> {{ $ticket->sub_category_name }}</p>
+                @endif
                 <div class="text-end">
                     <p class="mb-1"><strong>Created at:</strong> {{ \Carbon\Carbon::parse($ticket->created_at)->format('d M, Y h:i A') }}</p>
                     @if(!empty($ticket->contact_person))

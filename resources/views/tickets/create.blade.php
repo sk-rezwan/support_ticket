@@ -44,6 +44,7 @@
                     </select>
                 </div>
 
+{{-- Category --}}
 <div class="form-group mb-3">
     <label for="category_id" class="form-label label-bg">Category</label>
 
@@ -51,9 +52,9 @@
         {{-- Read-only category field when opened from dashboard --}}
         <div class="readonly-wrapper d-flex align-items-center">
             <input type="hidden" name="category_id" value="{{ $selectedCategory }}">
-            <input type="text" 
-                   class="form-control form-control-sm readonly-field" 
-                   value="{{ $categories->firstWhere('id', $selectedCategory)->name ?? 'Selected Category' }}" 
+            <input type="text"
+                   class="form-control form-control-sm readonly-field"
+                   value="{{ $categories->firstWhere('id', $selectedCategory)->name ?? 'Selected Category' }}"
                    readonly>
         </div>
     @else
@@ -61,11 +62,24 @@
         <select name="category_id" id="category_id" class="form-control form-control-sm custom-select" required>
             <option value="">-- Select Category --</option>
             @foreach($categories as $category)
-                <option value="{{ $category->id }}">{{ $category->name }}</option>
+                <option value="{{ $category->id }}"
+                    {{ old('category_id') == $category->id ? 'selected' : '' }}>
+                    {{ $category->name }}
+                </option>
             @endforeach
         </select>
     @endif
 </div>
+
+{{-- Sub Category --}}
+<div class="form-group mb-3">
+    <label for="sub_category_id" class="form-label label-bg">Sub Category</label>
+    <select name="sub_category_id" id="sub_category_id" class="form-control form-control-sm custom-select">
+        <option value="">-- Select Sub Category --</option>
+        {{-- Options will be loaded dynamically via JS --}}
+    </select>
+</div>
+
 
                 <div class="form-group mb-3">
                     <label for="subject" class="form-label label-bg">Subject</label>
@@ -175,4 +189,63 @@ body {
 }
 
 </style>
+
+<script>
+document.addEventListener('DOMContentLoaded', function () {
+    const categorySelect    = document.getElementById('category_id');
+    const subCategorySelect = document.getElementById('sub_category_id');
+
+    function resetSubCategories() {
+        subCategorySelect.innerHTML = '<option value="">-- Select Sub Category --</option>';
+    }
+
+    function loadSubCategories(categoryId, preselectedId = null) {
+        resetSubCategories();
+
+        if (!categoryId) {
+            return;
+        }
+
+        fetch(`{{ url('/sub-categories') }}/${categoryId}`)
+            .then(response => response.json())
+            .then(data => {
+                data.forEach(function (subCat) {
+                    const option = document.createElement('option');
+                    option.value = subCat.id;
+                    option.text  = subCat.name;
+
+                    if (preselectedId && parseInt(preselectedId) === subCat.id) {
+                        option.selected = true;
+                    }
+
+                    subCategorySelect.appendChild(option);
+                });
+            })
+            .catch(err => console.error('Error:', err));
+    }
+
+    // Convert PHP values to safe JS using json_encode()
+    const selectedCategory = {!! json_encode($selectedCategory ?? null) !!};
+    const oldCategory      = {!! json_encode(old('category_id')) !!};
+    const oldSubCategory   = {!! json_encode(old('sub_category_id')) !!};
+
+    // Case 1: Read-only category (dashboard)
+    if (selectedCategory) {
+        loadSubCategories(selectedCategory, oldSubCategory);
+    }
+
+    // Case 2: Normal form (direct create)
+    if (categorySelect) {
+        categorySelect.addEventListener('change', function () {
+            loadSubCategories(this.value);
+        });
+
+        if (oldCategory) {
+            loadSubCategories(oldCategory, oldSubCategory);
+        }
+    }
+});
+</script>
+
+
 @endsection

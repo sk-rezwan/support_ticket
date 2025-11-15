@@ -15,13 +15,15 @@ class TicketController extends Controller
         ->leftJoin('users as assigned', 'tickets.assigned_to', '=', 'assigned.id')
         ->leftJoin('priorities', 'tickets.priority_id', '=', 'priorities.id')
         ->leftJoin('categories', 'tickets.category_id', '=', 'categories.id')
+        ->leftJoin('sub_categories', 'tickets.sub_category_id', '=', 'sub_categories.id')
         ->select(
                 'tickets.*',
                 'b.name as br_name', // branch name
                 'solvers.name as solved_by_name',
                 'assigned.name as assigned_to_name',
                 'priorities.name as priority_name',
-                'categories.name as category_name'
+                'categories.name as category_name',
+                'sub_categories.name as sub_category_name'
             )
         ->orderBy('tickets.created_at', 'desc');
 
@@ -42,6 +44,17 @@ class TicketController extends Controller
         $tickets = $query->get();
 
         return view('tickets.index', compact('tickets'));
+    }
+
+    public function getSubCategories($categoryId)
+    {
+        $subCategories = DB::table('sub_categories')
+        ->where('category_id', $categoryId)
+        ->select('id', 'name')
+        ->orderBy('name')
+        ->get();
+
+        return response()->json($subCategories);
     }
 
 
@@ -65,6 +78,7 @@ class TicketController extends Controller
             'attachment' => 'nullable|file|mimes:jpg,jpeg,png,pdf,doc,docx,xlsx|max:2048',
             'priority_id' => 'nullable|exists:priorities,id',
             'category_id' => 'nullable|exists:categories,id',
+            'sub_category_id' => 'nullable|exists:sub_categories,id',
             'branch_id' => 'nullable|integer|exists:branches,id',
         ]);
 
@@ -90,6 +104,7 @@ class TicketController extends Controller
             'attachment' => $filePath ?? null,
             'priority_id' => $request->priority_id,
             'category_id' => $request->category_id,
+            'sub_category_id' => $request->sub_category_id,
             'status' => 0,
             'created_at' => now(),
             'updated_at' => now(),
@@ -104,6 +119,7 @@ class TicketController extends Controller
                 'attachment' => $filePath,
                 'priority_id' => $request->priority_id,
                 'category_id' => $request->category_id,
+                'sub_category_id' => $request->sub_category_id,
                 'status' => 0,
                 'created_at' => now(),
                 'updated_at' => now(),
@@ -117,14 +133,16 @@ class TicketController extends Controller
 {
         $ticket = DB::table('tickets')
             ->leftJoin('users as solvers', 'tickets.solved_by', '=', 'solvers.id')
-            ->leftJoin('users as assigned', 'tickets.assigned_to', '=', 'assigned.id') // 👈 assigned engineer
+            ->leftJoin('users as assigned', 'tickets.assigned_to', '=', 'assigned.id') //assigned engineer
             ->leftJoin('categories', 'tickets.category_id', '=', 'categories.id')
             ->leftJoin('priorities', 'tickets.priority_id', '=', 'priorities.id')
+            ->leftJoin('sub_categories', 'tickets.sub_category_id', '=', 'sub_categories.id')
             ->select(
                 'tickets.*',
                 'solvers.name as solved_by_name',
-                'assigned.name as assigned_to_name',      // 👈 engineer name
+                'assigned.name as assigned_to_name',      //engineer name
                 'categories.name as category_name',
+                'sub_categories.name as sub_category_name',
                 'priorities.name as priority_name'
             )
             ->where('tickets.id', $id)
