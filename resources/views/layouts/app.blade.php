@@ -56,6 +56,7 @@
                     <li class="nav-item">
                         <a class="nav-link" href="{{ url('/tickets') }}">Tickets</a>
                     </li>
+                    @if(auth()->user()->role === 1)
                     <li class="nav-item">
                         <a class="nav-link" data-bs-toggle="collapse" href="#reportsMenu" role="button" aria-expanded="false" aria-controls="reportsMenu">
                             Reports
@@ -71,6 +72,7 @@
                             </ul>
                         </div>
                     </li>
+                    @endif
                 </ul>
             </div>
             <div class="col-md-9 col-lg-10 p-4">

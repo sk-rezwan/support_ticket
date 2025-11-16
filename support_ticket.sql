@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: 127.0.0.1:3306
--- Generation Time: Nov 15, 2025 at 06:10 PM
+-- Generation Time: Nov 16, 2025 at 05:13 PM
 -- Server version: 8.0.31
 -- PHP Version: 8.2.29
 
@@ -139,16 +139,37 @@ CREATE TABLE IF NOT EXISTS `sub_categories` (
   `updated_at` timestamp NULL DEFAULT NULL,
   PRIMARY KEY (`id`),
   KEY `sub_categories_category_id_index` (`category_id`)
-) ENGINE=MyISAM AUTO_INCREMENT=4 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+) ENGINE=MyISAM AUTO_INCREMENT=25 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 --
 -- Dumping data for table `sub_categories`
 --
 
 INSERT INTO `sub_categories` (`id`, `category_id`, `name`, `created_at`, `updated_at`) VALUES
-(1, 1, 'CDIP EYE ISSUE', NULL, NULL),
-(2, 1, 'HRM ISSUE', NULL, NULL),
-(3, 1, 'SMART Move Mobile App related Issue', NULL, NULL);
+(1, 1, 'Installation/Setup', '2025-11-16 16:13:00', '2025-11-16 16:13:00'),
+(2, 1, 'Updates/Patches', '2025-11-16 16:13:00', '2025-11-16 16:13:00'),
+(3, 1, 'Licensing Issues', '2025-11-16 16:13:00', '2025-11-16 16:13:00'),
+(4, 1, 'App Errors/Crashes', '2025-11-16 16:13:00', '2025-11-16 16:13:00'),
+(5, 1, 'Performance Issues', '2025-11-16 16:13:00', '2025-11-16 16:13:00'),
+(6, 1, 'Compatibility Problems', '2025-11-16 16:13:00', '2025-11-16 16:13:00'),
+(7, 2, 'Laptop/Desktop Issues', '2025-11-16 16:13:00', '2025-11-16 16:13:00'),
+(8, 2, 'Printer Problems', '2025-11-16 16:13:00', '2025-11-16 16:13:00'),
+(9, 2, 'Network Device Issues', '2025-11-16 16:13:00', '2025-11-16 16:13:00'),
+(10, 2, 'Peripheral Issues', '2025-11-16 16:13:00', '2025-11-16 16:13:00'),
+(11, 2, 'Hardware Replacement', '2025-11-16 16:13:00', '2025-11-16 16:13:00'),
+(12, 2, 'Power/Battery Issues', '2025-11-16 16:13:00', '2025-11-16 16:13:00'),
+(13, 3, 'Login Issues', '2025-11-16 16:13:00', '2025-11-16 16:13:00'),
+(14, 3, 'Send/Receive Errors', '2025-11-16 16:13:00', '2025-11-16 16:13:00'),
+(15, 3, 'Mailbox Full', '2025-11-16 16:13:00', '2025-11-16 16:13:00'),
+(16, 3, 'Outlook Setup', '2025-11-16 16:13:00', '2025-11-16 16:13:00'),
+(17, 3, 'Sync Problems', '2025-11-16 16:13:00', '2025-11-16 16:13:00'),
+(18, 3, 'Rules/Filters Issues', '2025-11-16 16:13:00', '2025-11-16 16:13:00'),
+(19, 4, 'Access Requests', '2025-11-16 16:13:00', '2025-11-16 16:13:00'),
+(20, 4, 'Password Reset Guidance', '2025-11-16 16:13:00', '2025-11-16 16:13:00'),
+(21, 4, 'Network Connectivity Questions', '2025-11-16 16:13:00', '2025-11-16 16:13:00'),
+(22, 4, 'VPN/Remote Access Questions', '2025-11-16 16:13:00', '2025-11-16 16:13:00'),
+(23, 4, 'System/Service Availability', '2025-11-16 16:13:00', '2025-11-16 16:13:00'),
+(24, 4, 'IT Policy/Security Questions', '2025-11-16 16:13:00', '2025-11-16 16:13:00');
 
 -- --------------------------------------------------------
 
@@ -174,7 +195,7 @@ CREATE TABLE IF NOT EXISTS `tickets` (
   `updated_at` timestamp NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
   PRIMARY KEY (`id`),
   KEY `user_id` (`user_id`)
-) ENGINE=MyISAM AUTO_INCREMENT=38 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+) ENGINE=MyISAM AUTO_INCREMENT=39 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 --
 -- Dumping data for table `tickets`
@@ -190,7 +211,8 @@ INSERT INTO `tickets` (`id`, `user_id`, `subject`, `description`, `status`, `pri
 (32, 3, 'CDIP EYE Day end problem', 'need day back', 2, 3, 3, NULL, 11, '11', 'BAC 01671137783', 'tickets/i4BCWPfBgESdYH6Mz4s7Uxq9yRcAExPVhngfqzG2.png', '2025-11-03 12:42:48', '2025-11-10 12:43:43'),
 (28, 2, 'test Dharkhar', 'test Dharkhar', 0, 2, 2, NULL, NULL, NULL, NULL, NULL, '2025-11-02 11:52:36', '2025-11-02 11:52:36'),
 (36, 2, 'test assign issue', 'assign test', 2, 3, 1, 1, 12, '12', 'bm 013130111022', NULL, '2025-11-10 12:55:07', '2025-11-15 16:49:48'),
-(37, 1, 'app not loggin in', 'shows network error alert', 0, 4, 1, 3, NULL, NULL, 'Nafiz 453', NULL, '2025-11-15 11:04:05', '2025-11-15 11:04:05');
+(37, 1, 'app not loggin in', 'shows network error alert', 0, 4, 1, 3, NULL, NULL, 'Nafiz 453', NULL, '2025-11-15 11:04:05', '2025-11-15 11:04:05'),
+(38, 1, 'authe app issue', 'need to install auth app', 1, 4, 3, 16, 12, NULL, 'akash 981', 'tickets/8j0Us1agf2oGkBE9mC7uX7z9DFwmDlWauCozaE7E.jpg', '2025-11-16 11:01:47', '2025-11-16 11:04:38');
 
 -- --------------------------------------------------------
 
@@ -209,7 +231,7 @@ CREATE TABLE IF NOT EXISTS `ticket_replies` (
   PRIMARY KEY (`id`),
   KEY `ticket_replies_ticket_id_foreign` (`ticket_id`),
   KEY `ticket_replies_user_id_foreign` (`user_id`)
-) ENGINE=MyISAM AUTO_INCREMENT=9 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+) ENGINE=MyISAM AUTO_INCREMENT=10 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
 --
 -- Dumping data for table `ticket_replies`
@@ -223,7 +245,8 @@ INSERT INTO `ticket_replies` (`id`, `ticket_id`, `user_id`, `message`, `created_
 (5, 30, 11, 'test reply to HO', '2025-11-09 12:23:40', '2025-11-09 12:23:40'),
 (6, 32, 11, 'ok got it', '2025-11-10 12:26:51', '2025-11-10 12:26:51'),
 (7, 36, 4, 'ok', '2025-11-10 12:55:24', '2025-11-10 12:55:24'),
-(8, 36, 12, 'working on it', '2025-11-10 12:56:28', '2025-11-10 12:56:28');
+(8, 36, 12, 'working on it', '2025-11-10 12:56:28', '2025-11-10 12:56:28'),
+(9, 38, 4, 'working on this on anydesk', '2025-11-16 11:03:52', '2025-11-16 11:03:52');
 
 -- --------------------------------------------------------
 
@@ -241,7 +264,14 @@ CREATE TABLE IF NOT EXISTS `ticket_status_logs` (
   PRIMARY KEY (`id`),
   KEY `ticket_id` (`ticket_id`),
   KEY `status` (`status`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+) ENGINE=InnoDB AUTO_INCREMENT=2 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+
+--
+-- Dumping data for table `ticket_status_logs`
+--
+
+INSERT INTO `ticket_status_logs` (`id`, `ticket_id`, `status`, `changed_by`, `created_at`) VALUES
+(1, 38, 1, 4, '2025-11-16 11:04:38');
 
 -- --------------------------------------------------------
 

@@ -65,8 +65,9 @@ class TicketController extends Controller
         $categories = DB::table('categories')->select('id', 'name')->get();
 
         $selectedCategory = $request->category; // get category from query string
+        $selectedSubCategory = $request->sub_category; // sub-cat
 
-        return view('tickets.create', compact('branches', 'priorities', 'categories', 'selectedCategory'));
+        return view('tickets.create', compact('branches', 'priorities', 'categories', 'selectedCategory', 'selectedSubCategory'));
     }
 
     public function store(Request $request)

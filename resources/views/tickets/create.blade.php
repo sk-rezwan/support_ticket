@@ -201,15 +201,12 @@ document.addEventListener('DOMContentLoaded', function () {
 
     function loadSubCategories(categoryId, preselectedId = null) {
         resetSubCategories();
-
-        if (!categoryId) {
-            return;
-        }
+        if (!categoryId) return;
 
         fetch(`{{ url('/sub-categories') }}/${categoryId}`)
-            .then(response => response.json())
+            .then(res => res.json())
             .then(data => {
-                data.forEach(function (subCat) {
+                data.forEach(subCat => {
                     const option = document.createElement('option');
                     option.value = subCat.id;
                     option.text  = subCat.name;
@@ -220,21 +217,20 @@ document.addEventListener('DOMContentLoaded', function () {
 
                     subCategorySelect.appendChild(option);
                 });
-            })
-            .catch(err => console.error('Error:', err));
+            });
     }
 
-    // Convert PHP values to safe JS using json_encode()
-    const selectedCategory = {!! json_encode($selectedCategory ?? null) !!};
-    const oldCategory      = {!! json_encode(old('category_id')) !!};
-    const oldSubCategory   = {!! json_encode(old('sub_category_id')) !!};
+    const selectedCategory    = @json($selectedCategory ?? null);
+    const selectedSubCategory = @json($selectedSubCategory ?? null);
+    const oldCategory         = @json(old('category_id'));
+    const oldSubCategory      = @json(old('sub_category_id'));
 
-    // Case 1: Read-only category (dashboard)
+    // From dashboard: category & subcategory passed in URL
     if (selectedCategory) {
-        loadSubCategories(selectedCategory, oldSubCategory);
+        loadSubCategories(selectedCategory, selectedSubCategory ?? oldSubCategory);
     }
 
-    // Case 2: Normal form (direct create)
+    // Direct create: user can change category
     if (categorySelect) {
         categorySelect.addEventListener('change', function () {
             loadSubCategories(this.value);
@@ -246,6 +242,7 @@ document.addEventListener('DOMContentLoaded', function () {
     }
 });
 </script>
+
 
 
 @endsection

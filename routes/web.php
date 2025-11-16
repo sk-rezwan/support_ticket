@@ -29,6 +29,9 @@ Route::middleware('auth')->group(function () {
     //sub-categories
     Route::get('/sub-categories/{categoryId}', [TicketController::class, 'getSubCategories'])
     ->name('sub_categories.by_category');
+
+    Route::get('/dashboard/category/{id}', [DashboardController::class, 'subCategories'])
+    ->name('dashboard.subcategories'); //for dashbaord sub-cat selecting
     
     // replies
 
