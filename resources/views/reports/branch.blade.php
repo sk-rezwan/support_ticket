@@ -1,19 +1,19 @@
 @extends('layouts.app')
 
 @section('content')
-<h2>Branch-wise Ticket Report</h2>
+<h3>Date-wise Tickets</h3>
 
 <form method="GET" action="{{ url('/reports/branch') }}" class="row g-3 mb-4">
     <div class="col-auto">
         <label for="from_date" class="form-label">From Date</label>
-        <input type="date" name="from_date" id="from_date" class="form-control" required value="{{ request('from_date') }}">
+        <input type="date" name="from_date" id="from_date" class="form-control form-control-sm" required value="{{ request('from_date') }}">
     </div>
     <div class="col-auto">
         <label for="to_date" class="form-label">To Date</label>
-        <input type="date" name="to_date" id="to_date" class="form-control" required value="{{ request('to_date') }}">
+        <input type="date" name="to_date" id="to_date" class="form-control form-control-sm" required value="{{ request('to_date') }}">
     </div>
     <div class="col-auto align-self-end">
-        <button type="submit" class="btn btn-primary">Search</button>
+        <button type="submit" class="btn btn-info btn-sm px-3">Search</button>
     </div>
 </form>
 

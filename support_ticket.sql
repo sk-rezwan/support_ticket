@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: 127.0.0.1:3306
--- Generation Time: Nov 16, 2025 at 05:13 PM
+-- Generation Time: Nov 17, 2025 at 05:49 PM
 -- Server version: 8.0.31
 -- PHP Version: 8.2.29
 
@@ -147,11 +147,11 @@ CREATE TABLE IF NOT EXISTS `sub_categories` (
 
 INSERT INTO `sub_categories` (`id`, `category_id`, `name`, `created_at`, `updated_at`) VALUES
 (1, 1, 'Installation/Setup', '2025-11-16 16:13:00', '2025-11-16 16:13:00'),
-(2, 1, 'Updates/Patches', '2025-11-16 16:13:00', '2025-11-16 16:13:00'),
-(3, 1, 'Licensing Issues', '2025-11-16 16:13:00', '2025-11-16 16:13:00'),
-(4, 1, 'App Errors/Crashes', '2025-11-16 16:13:00', '2025-11-16 16:13:00'),
-(5, 1, 'Performance Issues', '2025-11-16 16:13:00', '2025-11-16 16:13:00'),
-(6, 1, 'Compatibility Problems', '2025-11-16 16:13:00', '2025-11-16 16:13:00'),
+(2, 1, 'Mobile Apps Related Problem', '2025-11-16 16:13:00', '2025-11-16 16:13:00'),
+(3, 1, 'CDIP EYE Issues', '2025-11-16 16:13:00', '2025-11-16 16:13:00'),
+(4, 1, 'Smart Move Issues', '2025-11-16 16:13:00', '2025-11-16 16:13:00'),
+(5, 1, 'Planning Software Issues', '2025-11-16 16:13:00', '2025-11-16 16:13:00'),
+(6, 1, 'HRM Leave/ Visit Issues', '2025-11-16 16:13:00', '2025-11-16 16:13:00'),
 (7, 2, 'Laptop/Desktop Issues', '2025-11-16 16:13:00', '2025-11-16 16:13:00'),
 (8, 2, 'Printer Problems', '2025-11-16 16:13:00', '2025-11-16 16:13:00'),
 (9, 2, 'Network Device Issues', '2025-11-16 16:13:00', '2025-11-16 16:13:00'),
@@ -202,14 +202,6 @@ CREATE TABLE IF NOT EXISTS `tickets` (
 --
 
 INSERT INTO `tickets` (`id`, `user_id`, `subject`, `description`, `status`, `priority_id`, `category_id`, `sub_category_id`, `assigned_to`, `solved_by`, `contact_person`, `attachment`, `created_at`, `updated_at`) VALUES
-(33, 2, 'test select cat', 'test select cat', 0, 2, 4, NULL, NULL, NULL, NULL, NULL, '2025-11-03 12:56:27', '2025-11-03 12:56:27'),
-(34, 1, 'text direct cat', 'text direct cat', 2, 3, 4, NULL, NULL, '4', NULL, NULL, '2025-11-03 12:56:54', '2025-11-08 06:27:15'),
-(35, 4, 'HRM Bill  back', 'bill option back', 0, 2, 1, NULL, NULL, NULL, 'Employee (HR)', NULL, '2025-11-03 13:04:29', '2025-11-09 12:28:17'),
-(29, 3, 'Test Chargas', 'Test Chargas', 1, 2, 1, NULL, NULL, '4', NULL, NULL, '2025-11-02 11:53:05', '2025-11-02 11:53:15'),
-(30, 4, 'Test HO', 'Test HO', 2, 4, 4, NULL, NULL, '11', 'Nafis FM', NULL, '2025-11-02 11:53:47', '2025-11-09 12:28:31'),
-(31, 1, 'PC Issue', 'Motherboard problem', 1, 3, 2, NULL, 10, NULL, 'arun 0131301111', NULL, '2025-11-02 11:58:18', '2025-11-10 12:47:41'),
-(32, 3, 'CDIP EYE Day end problem', 'need day back', 2, 3, 3, NULL, 11, '11', 'BAC 01671137783', 'tickets/i4BCWPfBgESdYH6Mz4s7Uxq9yRcAExPVhngfqzG2.png', '2025-11-03 12:42:48', '2025-11-10 12:43:43'),
-(28, 2, 'test Dharkhar', 'test Dharkhar', 0, 2, 2, NULL, NULL, NULL, NULL, NULL, '2025-11-02 11:52:36', '2025-11-02 11:52:36'),
 (36, 2, 'test assign issue', 'assign test', 2, 3, 1, 1, 12, '12', 'bm 013130111022', NULL, '2025-11-10 12:55:07', '2025-11-15 16:49:48'),
 (37, 1, 'app not loggin in', 'shows network error alert', 0, 4, 1, 3, NULL, NULL, 'Nafiz 453', NULL, '2025-11-15 11:04:05', '2025-11-15 11:04:05'),
 (38, 1, 'authe app issue', 'need to install auth app', 1, 4, 3, 16, 12, NULL, 'akash 981', 'tickets/8j0Us1agf2oGkBE9mC7uX7z9DFwmDlWauCozaE7E.jpg', '2025-11-16 11:01:47', '2025-11-16 11:04:38');
