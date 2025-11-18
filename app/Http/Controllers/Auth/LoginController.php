@@ -20,7 +20,7 @@ class LoginController extends Controller
     {
         // Validate input
         $request->validate([
-            'email'    => 'required|email',
+            'email'    => 'required',
             'password' => 'required'
         ]);
 
@@ -40,8 +40,8 @@ class LoginController extends Controller
                 session()->flash('success', 'Welcome, Engineer!');
                 return redirect('/tickets');
             } elseif ($user->role == 3) { // Branch
-                session()->flash('success', 'Welcome, Branch user!');
-                return redirect('/tickets');
+                session()->flash('success', 'Welcome');
+                return redirect('/dashboard');
             } else {
                 Auth::logout();
                 return back()->withErrors(['email' => 'Unauthorized role.']);

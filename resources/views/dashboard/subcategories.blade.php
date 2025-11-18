@@ -47,9 +47,10 @@
 <style>
 .category-card {
   border-radius: 14px;
-  transition: all 0.3s ease;
-  background: #EFECE3;
-  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.15);
+  padding: 16px;
+  background: #5DADE2; /* Light Flat Blue */
+  border: none;
+  transition: 0.25s ease;
 }
 
 .category-card:hover {

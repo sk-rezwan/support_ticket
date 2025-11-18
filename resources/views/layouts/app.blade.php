@@ -121,11 +121,6 @@
             </ul>
         </nav>
 
-        {{-- Optional small footer inside sidebar --}}
-        <div class="sidebar-footer text-center py-2 small text-muted border-top">
-            © {{ date('Y') }} CDIP
-        </div>
-
     </div>
 </div>
 
