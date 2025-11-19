@@ -35,7 +35,7 @@ class LoginController extends Controller
             // Role-based redirection
             if ($user->role == 1) { // Admin
                 session()->flash('success', 'Welcome, Admin!');
-                return redirect('/tickets');
+                return redirect('/admin/dashboard');
             } elseif ($user->role == 2) { // Engineer
                 session()->flash('success', 'Welcome, Engineer!');
                 return redirect('/tickets');

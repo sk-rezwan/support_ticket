@@ -88,12 +88,23 @@
         <nav class="sidebar-nav flex-grow-1 p-3">
             <ul class="nav flex-column">
 
+                @if(auth()->user()->role === 1)
+                <li class="nav-item mb-1">
+                    <a class="nav-link sidebar-link {{ request()->is('admin/dashboard') ? 'active' : '' }}" 
+                    href="{{ route('admin.dashboard') }}">
+                        <i class="fas fa-tachometer-alt me-2"></i> Admin Dashboard
+                    </a>
+                </li>
+                @endif
+
+                @if(auth()->user()->role == 2 || auth()->user()->role == 3)
                 <li class="nav-item mb-1">
                     <a class="nav-link sidebar-link {{ request()->is('dashboard') ? 'active' : '' }}" 
                        href="{{ url('/dashboard') }}">
                         <i class="fas fa-home me-2"></i> Dashboard
                     </a>
                 </li>
+                @endif
 
                 <li class="nav-item mb-1">
                     <a class="nav-link sidebar-link {{ request()->is('tickets*') ? 'active' : '' }}" 

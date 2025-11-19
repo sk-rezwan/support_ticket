@@ -12,6 +12,9 @@ Route::get('/login', [LoginController::class, 'showLoginForm'])->middleware('gue
 Route::post('/login', [LoginController::class, 'login'])->middleware('guest');
 
 Route::middleware('auth')->group(function () {
+    Route::get('/admin/dashboard', [DashboardController::class, 'adminDashboard'])
+    ->name('admin.dashboard'); //admin Dashboard
+
     Route::get('/dashboard', [DashboardController::class, 'index'])->name('dashboard');
     Route::get('/tickets', [TicketController::class, 'index'])->name('tickets.index');
     // CRUD ticket
