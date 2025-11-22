@@ -37,9 +37,12 @@ Route::middleware('auth')->group(function () {
     ->name('dashboard.subcategories'); //for dashbaord sub-cat selecting
     
     // replies
-
     Route::post('/tickets/{id}/replies', [TicketController::class, 'storeReply'])
     ->name('tickets.replies.store');
+
+    //notes
+    // route::post('/tickets/{ticket}/notes', [TicketController::class, 'storeNote'])
+    // ->name('tickets.notes.store');
 
     // assign engineers
     Route::post('/tickets/{id}/assign', [TicketController::class, 'assignEngineer'])

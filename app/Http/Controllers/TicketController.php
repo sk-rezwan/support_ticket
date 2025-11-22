@@ -207,6 +207,7 @@ public function storeReply(Request $request, $id)
             ->with('success', 'Reply added successfully.');
     }
 
+
     public function update(Request $request, $id)
         {
             // Only Admin and Engineer can update status
@@ -271,30 +272,41 @@ public function assignEngineer(Request $request, $id)
 
     $request->validate([
         'engineer_id' => 'required|exists:users,id',
+        'note'        => 'nullable|string',
     ]);
 
-        // Optional: ensure the selected user is actually an Engineer (role 2)
-        $engineer = DB::table('users')
-            ->where('id', $request->engineer_id)
-            ->where('role', 2) // role 2 = Engineer
-            ->first();
+    // Ensure the selected user is actually an Engineer (role 2)
+    $engineer = DB::table('users')
+        ->where('id', $request->engineer_id)
+        ->where('role', 2) // role 2 = Engineer
+        ->first();
 
-        if (!$engineer) {
-            return back()->with('error', 'Selected user is not an Engineer.');
-        }
-
-        DB::table('tickets')
-            ->where('id', $id)
-            ->update([
-                'assigned_to' => $engineer->id,
-                'updated_at'  => now(),
-            ]);
-
-        return redirect()
-            ->route('tickets.show', $id)
-            ->with('success', 'Ticket assigned to Engineer successfully.');
+    if (!$engineer) {
+        return back()->with('error', 'Selected user is not an Engineer.');
     }
 
+    // 1) Update ticket assignment
+    DB::table('tickets')
+        ->where('id', $id)
+        ->update([
+            'assigned_to' => $engineer->id,
+            'updated_at'  => now(),
+        ]);
 
+    // If a note is provided, insert it into ticket_replies.note
+    if (!empty(trim($request->note))) {
+        DB::table('ticket_replies')->insert([
+            'ticket_id'  => $id,
+            'user_id'    => auth()->id(),
+            'note'       => $request->note,  // insert raw text into `note` column
+            'created_at' => now(),
+            'updated_at' => now(),
+        ]);
+    }
 
+    return redirect()
+        ->route('tickets.show', $id)
+        ->with('success', 'Ticket assigned to Engineer successfully.');
+
+    }
 }

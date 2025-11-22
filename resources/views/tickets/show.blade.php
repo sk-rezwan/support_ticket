@@ -106,13 +106,13 @@
         </ul>
     </div>
 
-          {{-- Replies Section --}}
+            {{-- Replies Section --}}
             <hr>
             <h5 class="mb-3">💬 Replies</h5>
-
+            
             @if($replies->isEmpty())
                 <p class="text-muted">No replies yet.</p>
-            @else
+                @else
                 <div class="mb-4">
                     @foreach($replies as $reply)
                         <div class="border rounded p-3 mb-2 bg-light">
@@ -125,13 +125,21 @@
                             <div class="mt-2">
                                 {!! nl2br(e($reply->message)) !!}
                             </div>
+                {{-- If this row has a NOTE --}}
+                    @if($reply->note && auth()->user()->role != 3)
+                        <div class="mt-2 p-2 bg-warning bg-opacity-25 border-start border-3 border-warning">
+                            <strong>📝 Admin Note:</strong><br>
+                            {!! nl2br(e($reply->note)) !!}
+                        </div>
+                    @endif
+
                         </div>
                     @endforeach
                 </div>
             @endif
 
-            {{-- Reply Form: only for Admin (1) or Engineer (2) --}}
-            @if(in_array(auth()->user()->role, [1, 2]))
+            {{-- Reply Form: only for Admin (1) --}}
+            @if(in_array(auth()->user()->role, [1]))
                 <div class="mt-4">
                     <h5 class="mb-3">➕ Add a Reply</h5>
                     <form method="POST" action="{{ route('tickets.replies.store', $ticket->id) }}">
@@ -142,28 +150,31 @@
                             <textarea name="message" id="message" rows="4" class="form-control" required>{{ old('message') }}</textarea>
                         </div>
 
-                        <button type="submit" class="btn btn-primary btn-sm">
-                            <i class="bi bi-send"></i> Submit Reply
+                        <button type="submit" class="btn btn-primary">
+                            <i class="fas fa-paper-plane"></i>
                         </button>
                     </form>
                 </div>
             @endif
+            
+        <hr>
+        <!-- Assign Enginner section -->
+        @if(auth()->user()->role == 1)      
+        <div class="mt-3 mb-3">
+            <h5 class="mb-3">👨‍💻 Assign to Engineer</h5>
 
-            @if(auth()->user()->role == 1)
-    <hr>
-    <div class="mt-3 mb-3">
-        <h5 class="mb-3">👨‍💻 Assign to Engineer</h5>
+            @if(session('error'))
+                <div class="alert alert-danger py-1 px-2 mb-2">
+                    {{ session('error') }}
+                </div>
+            @endif
 
-        @if(session('error'))
-            <div class="alert alert-danger py-1 px-2 mb-2">
-                {{ session('error') }}
-            </div>
-        @endif
-
-        <form method="POST" action="{{ route('tickets.assign', $ticket->id) }}" class="d-flex flex-wrap align-items-center">
+        <form method="POST" action="{{ route('tickets.assign', $ticket->id) }}" class="row g-2 align-items-end">
             @csrf
 
-            <div class="me-2 mb-2">
+            {{-- Engineer dropdown --}}
+            <div class="col-md-3">
+                <label class="form-label mb-1">Engineer</label>
                 <select name="engineer_id" class="form-control form-control-sm">
                     <option value="">-- Select Engineer --</option>
                     @foreach($engineers as $engineer)
@@ -175,16 +186,27 @@
                 </select>
             </div>
 
-            <button type="submit" class="btn btn-sm btn-primary mb-2">
-                Assign
-            </button>
-        </form>
+            {{-- Note textarea (optional) --}}            
+            <div class="col-md-6">
+                <label for="note" class="form-label fw-semibold">Note to Engineer (optional)</label>
+                <textarea name="note" id="note" rows="1"
+                class="form-control form-control-sm"
+                placeholder="Write instructions or comments for the engineer...">{{ old('note') }}</textarea>
+            </div>
+
+                {{-- Assign button --}}
+                <div class="col-md-3 text-end">
+                        <button type="submit" class="btn btn-sm btn-info px-3 mb-2">
+                            Assign
+                        </button>
+                </div>
+            </form>
 
         @if($ticket->assigned_to)
             <p class="mt-2 mb-0">
                 <strong>Currently assigned to:</strong> {{ $ticket->assigned_to_name ?? 'Unknown' }}
-                    </p>
-                @endif
+            </p>
+            @endif
             </div>
         @endif
 

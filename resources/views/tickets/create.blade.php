@@ -74,7 +74,10 @@
 {{-- Sub Category --}}
 <div class="form-group mb-3">
     <label for="sub_category_id" class="form-label label-bg">Sub Category</label>
-    <select name="sub_category_id" id="sub_category_id" class="form-control form-control-sm custom-select">
+
+    <select name="sub_category_id"
+            id="sub_category_id"
+            class="form-control form-control-sm custom-select">
         <option value="">-- Select Sub Category --</option>
         {{-- Options will be loaded dynamically via JS --}}
     </select>
@@ -196,12 +199,21 @@ document.addEventListener('DOMContentLoaded', function () {
     const subCategorySelect = document.getElementById('sub_category_id');
 
     function resetSubCategories() {
+        if (!subCategorySelect) return;
         subCategorySelect.innerHTML = '<option value="">-- Select Sub Category --</option>';
     }
 
     function loadSubCategories(categoryId, preselectedId = null) {
+        if (!subCategorySelect) return;
+
         resetSubCategories();
-        if (!categoryId) return;
+
+        if (!categoryId) {
+            subCategorySelect.disabled = true;
+            return;
+        }
+
+        subCategorySelect.disabled = false;
 
         fetch(`{{ url('/sub-categories') }}/${categoryId}`)
             .then(res => res.json())
@@ -210,14 +222,15 @@ document.addEventListener('DOMContentLoaded', function () {
                     const option = document.createElement('option');
                     option.value = subCat.id;
                     option.text  = subCat.name;
-
-                    if (preselectedId && parseInt(preselectedId) === subCat.id) {
-                        option.selected = true;
-                    }
-
                     subCategorySelect.appendChild(option);
                 });
-            });
+
+                // Preselect after all options are added
+                if (preselectedId) {
+                    subCategorySelect.value = String(preselectedId);
+                }
+            })
+            .catch(err => console.error('Error loading subcategories:', err));
     }
 
     const selectedCategory    = @json($selectedCategory ?? null);
@@ -225,12 +238,12 @@ document.addEventListener('DOMContentLoaded', function () {
     const oldCategory         = @json(old('category_id'));
     const oldSubCategory      = @json(old('sub_category_id'));
 
-    // From dashboard: category & subcategory passed in URL
+    // Case 1: coming from dashboard with ?category=&sub_category=
     if (selectedCategory) {
         loadSubCategories(selectedCategory, selectedSubCategory ?? oldSubCategory);
     }
 
-    // Direct create: user can change category
+    // Case 2: normal create page, user picks category
     if (categorySelect) {
         categorySelect.addEventListener('change', function () {
             loadSubCategories(this.value);
@@ -242,6 +255,9 @@ document.addEventListener('DOMContentLoaded', function () {
     }
 });
 </script>
+
+
+
 
 
 
