@@ -2,12 +2,9 @@
 
 @section('content')
 <div class="container py-5 text-center bg-light">
-    <h3 class="font-weight-bold mb-3 text-primary">
-        💻 IT Support – {{ $category->name }}
+    <h3 class="text-secondary mb-4">
+        Select a subcategory of {{ $category->name }}
     </h3>
-    <p class="text-secondary mb-4">
-        Select a subcategory to report a new ticket
-    </p>
 
     <div class="row justify-content-center">
         @forelse($subCategories as $sub)

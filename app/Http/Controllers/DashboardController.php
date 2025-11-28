@@ -11,9 +11,33 @@ class DashboardController extends Controller
 {
     public function index()
     {
-        // Load categories dynamically from DB
-        $categories = DB::table('categories')->select('id', 'name')->get();
-        return view('dashboard.index', compact('categories'));
+       $categories = DB::table('categories')
+            ->select('id', 'name')
+            ->get();
+
+        // Example assumes these columns exist on tickets table:
+        // tickets.category_id, tickets.sub_category_id, tickets.solved_by, tickets.assigned_to
+        // and that users table has name
+        $tickets = DB::table('tickets as t')
+            ->leftJoin('categories as c', 't.category_id', '=', 'c.id')
+            ->leftJoin('sub_categories as sc', 't.sub_category_id', '=', 'sc.id')
+            ->leftJoin('users as s', 't.solved_by', '=', 's.id')
+            ->leftJoin('users as a', 't.assigned_to', '=', 'a.id')
+            // if "My Tickets", you probably want only tickets created by logged-in user:
+            // ->where('t.created_by', auth()->id())
+            ->select(
+                't.*',
+                'c.name as category_name',
+                'sc.name as sub_category_name',
+                's.name as solved_by_name',
+                'a.name as assigned_to_name'
+            )
+            ->latest('t.created_at')
+            ->get();
+
+        $subCategories = DB::table('sub_categories')->get();
+
+        return view('dashboard.index', compact('categories', 'tickets', 'subCategories'));
     }
 
     public function subCategories($id)
