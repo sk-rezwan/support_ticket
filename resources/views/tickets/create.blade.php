@@ -34,6 +34,7 @@
                 </div>
                 @endif
 
+                @if($isAdmin)
                 <div class="form-group mb-3">
                     <label for="priority_id" class="form-label label-bg">Priority</label>
                     <select name="priority_id" id="priority_id" class="form-control form-control-sm custom-select" required>
@@ -43,6 +44,7 @@
                         @endforeach
                     </select>
                 </div>
+                @endif
 
 {{-- Category --}}
 <div class="form-group mb-3">

@@ -19,7 +19,10 @@
                         <th>Subject</th>
                         <th>Category</th>
                         <th>Sub-Category</th>
+                        @php $isAdmin = auth()->user()->role === 1; @endphp
+                        @if($isAdmin)
                         <th>Priority</th>
+                        @endif
                         <th>Status</th>
                         <th>Date</th>
                         <th>Solved By</th>
@@ -36,9 +39,10 @@
 
                             {{-- Category and Sub-Category--}}
                             <td>{{ $ticket->category_name ?? 'N/A' }}</td>
-
                             <td>{{ $ticket->sub_category_name ?? 'N/A' }}</td>
 
+                            @php $isAdmin = auth()->user()->role === 1; @endphp
+                            @if($isAdmin)
                             {{-- Priority --}}
                             <td class="text-center">
                                 @if($ticket->priority_name == 'High')
@@ -53,6 +57,7 @@
                                     <span class="badge bg-secondary">N/A</span>
                                 @endif
                             </td>
+                            @endif
 
                             {{-- Status --}}
                             <td class="text-center">
