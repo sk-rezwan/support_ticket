@@ -87,7 +87,9 @@
 
                                 {{-- Solved By --}}
                                 <td>{{ $ticket->solved_by_name ?? '—' }}</td>
-                                <td>{{ $ticket->assigned_to_name ?? '—' }}</td>
+                                <td>
+                                {{ !empty($ticket->assigned_engineers) ? implode(', ', $ticket->assigned_engineers) : ($ticket->assigned_to_name ?? 'Unassigned') }}
+                                </td>
 
                                 {{-- Actions --}}
                                 <td class="text-center">

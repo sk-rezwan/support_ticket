@@ -76,7 +76,14 @@
                             {{-- Solved By --}}
                             <td>{{ $ticket->solved_by_name ?? '—' }}</td>
                             
-                            <td>{{ $ticket->assigned_to_name ?? '—' }}</td>
+                            <td>
+                                    @if(!empty($ticket->assigned_engineers))
+                                        {{ implode(', ', $ticket->assigned_engineers) }}
+                                    @else
+                                        {{ $ticket->assigned_to_name ?? 'Unassigned' }}
+                                    @endif
+                            </td>
+
 
                             {{-- Actions --}}
                             <td class="text-center">

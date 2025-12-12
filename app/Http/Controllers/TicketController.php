@@ -42,7 +42,15 @@ class TicketController extends Controller
         // Admin (role 1): no filter, sees all
 
         $tickets = $query->get();
-
+        $tickets->transform(function ($t) {
+            $t->assigned_engineers = DB::table('ticket_engineer as te')
+                ->join('users as u', 'te.user_id', '=', 'u.id')
+                ->where('te.ticket_id', $t->id)
+                ->pluck('u.name')
+                ->toArray();
+            return $t;
+        });
+        
         return view('tickets.index', compact('tickets'));
     }
 
@@ -72,64 +80,102 @@ class TicketController extends Controller
 
     public function store(Request $request)
     {
-        $request->validate([
-            'subject' => 'required|string|max:255',
-            'description' => 'required|string',
-            'contact_person' => 'nullable|string|max:255',
-            'attachment' => 'nullable|file|mimes:jpg,jpeg,png,pdf,doc,docx,xlsx|max:2048',
-            'priority_id' => 'nullable|exists:priorities,id',
-            'category_id' => 'nullable|exists:categories,id',
-            'sub_category_id' => 'nullable|exists:sub_categories,id',
-            'branch_id' => 'nullable|integer|exists:branches,id',
-        ]);
+        {
+    $request->validate([
+        'subject'         => 'required|string|max:255',
+        'description'     => 'required|string',
+        'contact_person'  => 'nullable|string|max:255',
+        'attachment'      => 'nullable|file|mimes:jpg,jpeg,png,pdf,doc,docx,xlsx|max:2048',
+        'priority_id'     => 'nullable|exists:priorities,id',
+        'category_id'     => 'nullable|exists:categories,id',
+        'sub_category_id' => 'nullable|exists:sub_categories,id',
+        'branch_id'       => 'nullable|integer|exists:branches,id',
+    ]);
 
-        $filePath = null;
-        if ($request->hasFile('attachment')) {
-            $filePath = $request->file('attachment')->store('tickets', 'public');
-        }
+    $filePath = null;
+    if ($request->hasFile('attachment')) {
+        $filePath = $request->file('attachment')->store('tickets', 'public');
+    }
 
+    // ✅ ALWAYS define these so both admin & branch paths can use them
+    $assignedTo  = null;
+    $engineerIds = [];
+    $ticketId    = null;
+
+    // ✅ Determine which branch_id will be stored in tickets.user_id
     if (auth()->user()->role === 1) {
+        $branchId = $request->branch_id;
+
         $user = DB::table('users')
-            ->where('branch_id', $request->branch_id)
+            ->where('branch_id', $branchId)
             ->first();
 
         if (!$user) {
             return back()->with('error', 'No user found in the selected branch.');
         }
-
-        DB::table('tickets')->insert([
-            'user_id' => $request->branch_id,
-            'subject' => $request->subject,
-            'description' => $request->description,
-            'contact_person' => $request->contact_person,
-            'attachment' => $filePath ?? null,
-            'priority_id' => $request->priority_id,
-            'category_id' => $request->category_id,
-            'sub_category_id' => $request->sub_category_id,
-            'status' => 0,
-            'created_at' => now(),
-            'updated_at' => now(),
-        ]);
     } else {
-            DB::table('tickets')->insert([
-                
-                'user_id' => auth()->user()->branch_id,
-                'subject' => $request->subject,
-                'description' => $request->description,
-                'contact_person' => $request->contact_person,
-                'attachment' => $filePath,
-                'priority_id' => $request->priority_id,
-                'category_id' => $request->category_id,
-                'sub_category_id' => $request->sub_category_id,
-                'status' => 0,
-                'created_at' => now(),
-                'updated_at' => now(),
-            ]);
+        $branchId = auth()->user()->branch_id;
+    }
+
+    // ✅ AUTO-ASSIGN ENGINEERS (works for both admin & branch user)
+    if ($request->category_id) {
+        $assignRoleIdsString = DB::table('categories')
+            ->where('id', $request->category_id)
+            ->value('assign_role_ids');
+
+        if (!empty($assignRoleIdsString)) {
+            $roleIds = array_filter(array_map('trim', explode(',', $assignRoleIdsString)));
+
+            if (!empty($roleIds)) {
+                $engineers = DB::table('users')
+                    ->where('role', 2)             // engineers
+                    ->whereIn('role_id', $roleIds) // specialization
+                    ->get();
+
+                if ($engineers->isNotEmpty()) {
+                    $assignedTo  = $engineers->first()->id;  // primary
+                    $engineerIds = $engineers->pluck('id')->all();
+                }
+            }
+        }
+    }
+
+    // ✅ Insert ticket and get ticket id (IMPORTANT)
+    $ticketId = DB::table('tickets')->insertGetId([
+        'user_id'         => $branchId,
+        'subject'         => $request->subject,
+        'description'     => $request->description,
+        'contact_person'  => $request->contact_person,
+        'attachment'      => $filePath,
+        'priority_id'     => $request->priority_id,
+        'category_id'     => $request->category_id,
+        'sub_category_id' => $request->sub_category_id,
+        'assigned_to'     => $assignedTo,   // can be null
+        'status'          => 0,
+        'created_at'      => now(),
+        'updated_at'      => now(),
+    ]);
+
+        // ✅ Save all engineers in ticket_engineer
+        if (!empty($engineerIds)) {
+            $now = now();
+            $rows = [];
+
+            foreach ($engineerIds as $engId) {
+                $rows[] = [
+                    'ticket_id'  => $ticketId,
+                    'user_id'    => $engId,
+                    'created_at' => $now,
+                    'updated_at' => $now,
+                ];
+            }
+
+            DB::table('ticket_engineer')->insert($rows);
         }
 
         return redirect()->route('tickets.index')->with('success', 'Ticket created successfully.');
     }
-
+}
     public function show($id)
 {
         $ticket = DB::table('tickets')
@@ -169,6 +215,14 @@ class TicketController extends Controller
             ->where('role', 2)
             ->select('id', 'name')
             ->get();
+        
+        $assignedEngineers = DB::table('ticket_engineer as te')
+            ->join('users as u', 'te.user_id', '=', 'u.id')
+            ->where('te.ticket_id', $id)
+            ->orderBy('u.name')
+            ->select('u.id', 'u.name')
+            ->get();
+
 
         $logRows = DB::table('ticket_status_logs')
                     ->where('ticket_id', $id)
@@ -180,7 +234,7 @@ class TicketController extends Controller
         $solvedAt     = $ticket->status == 2 ? \Carbon\Carbon::parse($ticket->updated_at) : null;
 
 
-        return view('tickets.show', compact('ticket', 'replies', 'engineers','pendingAt','processingAt','solvedAt'));
+        return view('tickets.show', compact('ticket', 'replies', 'engineers','pendingAt','processingAt','solvedAt','assignedEngineers'));
     }
 
 public function storeReply(Request $request, $id)

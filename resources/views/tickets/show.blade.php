@@ -51,10 +51,15 @@
                     </a>
                 </div>
             @endif
-
-            @if(!empty($ticket->assigned_to))
+            {{-- shows multiple engineers --}}
+            @if(isset($assignedEngineers) && $assignedEngineers->isNotEmpty())
                 <p class="mb-0">
-                    <strong>Assigned Engineer:</strong> {{ $ticket->assigned_to_name ?? 'N/A' }}
+                    <strong>Assigned Engineers:</strong>
+                    {{ $assignedEngineers->pluck('name')->join(', ') }}
+                </p>
+            @else
+                <p class="mb-0">
+                    <strong>Assigned Engineers:</strong> <span class="text-muted">Unassigned</span>
                 </p>
             @endif
 
@@ -158,6 +163,7 @@
             @endif
             
         <hr>
+
         <!-- Assign Enginner section -->
         @if(auth()->user()->role == 1)      
         <div class="mt-3 mb-3">

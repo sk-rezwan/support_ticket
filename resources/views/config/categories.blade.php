@@ -67,7 +67,18 @@
             @endforelse
         </tbody>
     </table>
-
+    <div class="mb-3">
+        <label for="assign_role_ids" class="form-label">Engineer role_ids for this category</label>
+        <input type="text"
+            name="assign_role_ids"
+            id="assign_role_ids"
+            class="form-control form-control-sm"
+            value="{{ old('assign_role_ids', $category->assign_role_ids ?? '') }}"
+            placeholder="e.g. 1,2 for Software + Hardware">
+            <small class="text-muted">
+                Comma-separated role_id values. All engineers with these role_ids will be auto-assigned.
+            </small>
+        </div>
 </body>
 </html>
 @endsection
