@@ -40,7 +40,7 @@
       <hr>
     </div>
 
-    {{-- ====== TICKET SUMMARY / INDEX (BOTTOM) ====== --}}
+    {{-- ====== MY TICKET SUMMARY  / INDEX (BOTTOM) ====== --}}
     <div class="card shadow-sm">
         <div class="card-header bg-light text-grey d-flex justify-content-between align-items-center">
             <h5 class="mb-0">My Tickets</h5>
@@ -62,6 +62,7 @@
                         </tr>
                     </thead>
                     <tbody>
+                        
                         @forelse ($tickets as $index => $ticket)
                             <tr>
                                 <td class="text-center">{{ $index + 1 }}</td>
