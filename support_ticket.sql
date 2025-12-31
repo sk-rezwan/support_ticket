@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: 127.0.0.1:3306
--- Generation Time: Dec 12, 2025 at 08:49 PM
+-- Generation Time: Dec 31, 2025 at 05:46 AM
 -- Server version: 8.0.31
 -- PHP Version: 8.2.29
 
@@ -196,20 +196,18 @@ CREATE TABLE IF NOT EXISTS `tickets` (
   `updated_at` timestamp NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
   PRIMARY KEY (`id`),
   KEY `user_id` (`user_id`)
-) ENGINE=MyISAM AUTO_INCREMENT=8 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+) ENGINE=MyISAM AUTO_INCREMENT=19 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 --
 -- Dumping data for table `tickets`
 --
 
 INSERT INTO `tickets` (`id`, `user_id`, `subject`, `description`, `status`, `priority_id`, `category_id`, `sub_category_id`, `assigned_to`, `solved_by`, `contact_person`, `attachment`, `created_at`, `updated_at`) VALUES
-(1, 1, 'test subj 1', 'test desc 1', 0, 2, 2, 7, 11, NULL, 'test contact 207', NULL, '2025-11-21 13:24:36', '2025-11-22 11:37:34'),
-(2, 1, 'test subj 2', 'test desc 2', 0, 1, 1, 1, NULL, NULL, 'test contact 453', NULL, '2025-11-21 13:24:36', '2025-11-21 13:24:36'),
-(3, 1, 'not printing', 'page stuck', 0, NULL, 2, 8, NULL, NULL, '461', NULL, '2025-11-28 12:50:10', '2025-11-28 12:50:10'),
-(4, 1, 'achv issues', 'issues new entry', 0, NULL, 1, 5, 15, NULL, 'p mondal 455', NULL, '2025-12-12 06:31:44', '2025-12-12 14:42:02'),
-(5, 1, 'test role', 'test role id', 0, NULL, 1, 3, 14, NULL, '1111', NULL, '2025-12-12 07:30:26', '2025-12-12 14:41:00'),
-(6, 1, 'test hrd assign to', 'test hrd assign totest hrd assign to', 0, NULL, 2, 11, 15, NULL, NULL, NULL, '2025-12-12 07:34:13', '2025-12-12 07:34:13'),
-(7, 1, 'app related issue', 'software issue', 0, NULL, 1, 2, 12, NULL, '1111', NULL, '2025-12-12 07:34:45', '2025-12-12 14:41:25');
+(5, 2, 'test for user 2', 'ddd test', 0, NULL, 1, NULL, NULL, NULL, NULL, NULL, '2025-12-21 10:58:35', '2025-12-27 05:16:06'),
+(4, 1, 'test ticket01', 'test ticket', 0, NULL, 1, 3, NULL, NULL, NULL, NULL, '2025-12-21 10:38:27', '2025-12-27 05:15:35'),
+(3, 1, 'cdcdscascsc', 'fvefv', 0, NULL, 1, 5, NULL, NULL, NULL, NULL, '2025-12-13 13:27:35', '2025-12-27 05:15:38'),
+(17, 1, 'test ticket a.', 'test ticket a., test ticket a.', 0, NULL, 2, 7, 15, NULL, '001', NULL, '2025-12-30 23:40:51', '2025-12-30 23:40:51'),
+(18, 1, 'test ticket dd', 'test ticket dd\r\ntest ticket dd. test ticket dd', 0, NULL, 4, 24, NULL, NULL, 'Employee (HR)', NULL, '2025-12-30 23:41:31', '2025-12-30 23:41:31');
 
 -- --------------------------------------------------------
 
@@ -227,16 +225,17 @@ CREATE TABLE IF NOT EXISTS `ticket_engineer` (
   PRIMARY KEY (`id`),
   KEY `ticket_id` (`ticket_id`),
   KEY `user_id` (`user_id`)
-) ENGINE=MyISAM AUTO_INCREMENT=4 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+) ENGINE=MyISAM AUTO_INCREMENT=5 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 --
 -- Dumping data for table `ticket_engineer`
 --
 
 INSERT INTO `ticket_engineer` (`id`, `ticket_id`, `user_id`, `created_at`, `updated_at`) VALUES
-(1, 6, 15, '2025-12-12 07:34:13', '2025-12-12 07:34:13'),
-(2, 7, 4, '2025-12-12 07:34:13', '2025-12-12 07:34:13'),
-(3, 7, 6, '2025-12-12 07:34:13', '2025-12-12 07:34:13');
+(1, 14, 15, '2025-12-21 12:17:38', '2025-12-21 12:17:38'),
+(2, 14, 16, '2025-12-21 12:17:38', '2025-12-21 12:17:38'),
+(3, 17, 15, '2025-12-30 23:40:51', '2025-12-30 23:40:51'),
+(4, 17, 16, '2025-12-30 23:40:51', '2025-12-30 23:40:51');
 
 -- --------------------------------------------------------
 
@@ -282,7 +281,7 @@ CREATE TABLE IF NOT EXISTS `ticket_status_logs` (
   PRIMARY KEY (`id`),
   KEY `ticket_id` (`ticket_id`),
   KEY `status` (`status`)
-) ENGINE=InnoDB AUTO_INCREMENT=5 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+) ENGINE=InnoDB AUTO_INCREMENT=6 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 --
 -- Dumping data for table `ticket_status_logs`
@@ -292,7 +291,8 @@ INSERT INTO `ticket_status_logs` (`id`, `ticket_id`, `status`, `changed_by`, `cr
 (1, 38, 1, 4, '2025-11-16 11:04:38'),
 (2, 39, 1, 4, '2025-11-19 11:42:36'),
 (3, 42, 1, 4, '2025-11-19 11:44:14'),
-(4, 43, 2, 4, '2025-11-19 11:44:40');
+(4, 43, 2, 4, '2025-11-19 11:44:40'),
+(5, 6, 2, 4, '2025-12-13 11:21:11');
 
 -- --------------------------------------------------------
 
@@ -315,7 +315,7 @@ CREATE TABLE IF NOT EXISTS `users` (
   `updated_at` timestamp NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
   PRIMARY KEY (`id`),
   UNIQUE KEY `email` (`email`)
-) ENGINE=MyISAM AUTO_INCREMENT=16 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+) ENGINE=MyISAM AUTO_INCREMENT=17 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 --
 -- Dumping data for table `users`
@@ -332,7 +332,8 @@ INSERT INTO `users` (`id`, `name`, `email`, `email_verified_at`, `password`, `re
 (14, 'Joyanta Kumer', '6246', NULL, 'e10adc3949ba59abbe56e057f20f883e', NULL, 2, NULL, 4, '2025-06-13 02:28:57', '2025-11-18 16:57:46'),
 (11, 'Pronab Mondal', '2692', NULL, 'e10adc3949ba59abbe56e057f20f883e', NULL, 2, NULL, 4, '2025-06-13 02:28:57', '2025-11-18 16:56:30'),
 (12, 'Bulon', '5696', NULL, 'e10adc3949ba59abbe56e057f20f883e', NULL, 2, NULL, 4, '2025-06-13 02:28:57', '2025-11-18 16:57:46'),
-(15, 'Maznu', '1802', NULL, 'e10adc3949ba59abbe56e057f20f883e', NULL, 2, 2, 4, '2025-06-13 02:28:57', '2025-12-02 17:32:58');
+(15, 'Maznu', '1802', NULL, 'e10adc3949ba59abbe56e057f20f883e', NULL, 2, 2, 4, '2025-06-13 02:28:57', '2025-12-02 17:32:58'),
+(16, 'Akash', '66250', NULL, 'e10adc3949ba59abbe56e057f20f883e', NULL, 2, 2, 4, '2025-06-13 02:28:57', '2025-12-13 19:08:13');
 COMMIT;
 
 /*!40101 SET CHARACTER_SET_CLIENT=@OLD_CHARACTER_SET_CLIENT */;
